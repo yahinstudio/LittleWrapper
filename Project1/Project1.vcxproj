@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="debug-export|Win32">
+      <Configuration>debug-export</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug-export|x64">
+      <Configuration>debug-export</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{1e2e768d-2976-49a2-9a2b-6d8292004f80}</ProjectGuid>
+    <RootNamespace>Project1</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug-export|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug-export|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug-export|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug-export|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug-export|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug-export|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug-export|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <Optimization>MinSpace</Optimization>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug-export|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="archive.h" />
+    <ClInclude Include="cJSON-1.7.14\cJSON.h" />
+    <ClInclude Include="cJSON-1.7.14\cJSON_Utils.h" />
+    <ClInclude Include="debug.h" />
+    <ClInclude Include="dir_utils.h" />
+    <ClInclude Include="env.h" />
+    <ClInclude Include="magic.h" />
+    <ClInclude Include="md5\md5.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\aes\aes_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\arm_arch.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\asn1\asn1_item_list.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\asn1\asn1_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\asn1\charmap.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\asn1\standard_methods.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\asn1\tbl_standard.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\async\arch\async_null.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\async\arch\async_posix.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\async\arch\async_win.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\async\async_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\bf\bf_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\bf\bf_pi.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\bio\bio_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\blake2\blake2_impl.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\blake2\blake2_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\bn\bn_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\bn\bn_prime.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\bn\rsaz_exp.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\camellia\cmll_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\cast\cast_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\cast\cast_s.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\cms\cms_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\comp\comp_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\conf\conf_def.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\conf\conf_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ct\ct_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\des\des_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\des\spr.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\dh\dh_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\dsa\dsa_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\dso\dso_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ec\curve448\arch_32\arch_intrinsics.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ec\curve448\arch_32\f_impl.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ec\curve448\curve448utils.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ec\curve448\curve448_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ec\curve448\ed448.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ec\curve448\field.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ec\curve448\point_448.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ec\curve448\word.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ec\ec_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\engine\eng_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\evp\evp_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\hmac\hmac_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\idea\idea_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\lhash\lhash_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\md4\md4_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\md5\md5_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\mips_arch.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\modes\modes_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\objects\obj_dat.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\objects\obj_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\objects\obj_xref.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ocsp\ocsp_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\pkcs12\p12_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\poly1305\poly1305_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ppc_arch.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\rand\rand_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\rc2\rc2_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\rc4\rc4_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\rc5\rc5_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ripemd\rmdconst.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ripemd\rmd_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\rsa\rsa_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\s390x_arch.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\seed\seed_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\sha\sha_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\siphash\siphash_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\sm3\sm3_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\sparc_arch.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\store\store_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ts\ts_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\ui\ui_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\vms_rms.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\whrlpool\wp_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\x509v3\ext_dat.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\x509v3\pcy_local.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\x509v3\standard_exts.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\x509v3\v3_admis.h" />
+    <ClInclude Include="openssl-1.1.1k\crypto\x509\x509_local.h" />
+    <ClInclude Include="openssl-1.1.1k\engines\e_afalg.h" />
+    <ClInclude Include="openssl-1.1.1k\engines\e_afalg_err.h" />
+    <ClInclude Include="openssl-1.1.1k\engines\e_capi_err.h" />
+    <ClInclude Include="openssl-1.1.1k\engines\e_dasync_err.h" />
+    <ClInclude Include="openssl-1.1.1k\engines\e_ossltest_err.h" />
+    <ClInclude Include="openssl-1.1.1k\fuzz\fuzzer.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\aria.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\asn1.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\async.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\bn.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\bn_dh.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\bn_srp.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\chacha.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\cryptlib.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\ctype.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\ec.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\engine.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\err.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\evp.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\lhash.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\md32_common.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\objects.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\poly1305.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\rand.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\sha.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\siphash.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\sm2.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\sm2err.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\sm3.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\sm4.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\store.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\x509.h" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\__DECC_INCLUDE_EPILOGUE.H" />
+    <ClInclude Include="openssl-1.1.1k\include\crypto\__DECC_INCLUDE_PROLOGUE.H" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\bio.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\comp.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\conf.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\constant_time.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\cryptlib.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\dane.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\dso.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\dsoerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\err.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\nelem.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\numbers.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\o_dir.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\o_str.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\refcount.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\sockets.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\sslconf.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\thread_once.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\tsan_assist.h" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\__DECC_INCLUDE_EPILOGUE.H" />
+    <ClInclude Include="openssl-1.1.1k\include\internal\__DECC_INCLUDE_PROLOGUE.H" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\aes.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\asn1.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\asn1err.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\asn1t.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\asn1_mac.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\async.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\asyncerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\bio.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\bioerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\blowfish.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\bn.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\bnerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\buffer.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\buffererr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\camellia.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\cast.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\cmac.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\cms.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\cmserr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\comp.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\comperr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\conf.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\conferr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\conf_api.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\crypto.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\cryptoerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ct.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\cterr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\des.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\dh.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\dherr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\dsa.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\dsaerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\dtls1.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ebcdic.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ec.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ecdh.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ecdsa.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ecerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\engine.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\engineerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\err.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\evp.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\evperr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\e_os2.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\hmac.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\idea.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\kdf.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\kdferr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\lhash.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\md2.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\md4.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\md5.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\mdc2.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\modes.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\objects.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\objectserr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\obj_mac.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ocsp.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ocsperr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\opensslv.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ossl_typ.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\pem.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\pem2.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\pemerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\pkcs12.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\pkcs12err.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\pkcs7.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\pkcs7err.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\rand.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\randerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\rand_drbg.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\rc2.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\rc4.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\rc5.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ripemd.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\rsa.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\rsaerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\safestack.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\seed.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\sha.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\srp.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\srtp.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ssl.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ssl2.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ssl3.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\sslerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\stack.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\store.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\storeerr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\symhacks.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\tls1.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ts.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\tserr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\txt_db.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\ui.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\uierr.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\whrlpool.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\x509.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\x509err.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\x509v3.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\x509v3err.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\x509_vfy.h" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\__DECC_INCLUDE_EPILOGUE.H" />
+    <ClInclude Include="openssl-1.1.1k\include\openssl\__DECC_INCLUDE_PROLOGUE.H" />
+    <ClInclude Include="openssl-1.1.1k\ms\uplink.h" />
+    <ClInclude Include="openssl-1.1.1k\os-dep\haiku.h" />
+    <ClInclude Include="openssl-1.1.1k\ssl\packet_local.h" />
+    <ClInclude Include="openssl-1.1.1k\ssl\record\record.h" />
+    <ClInclude Include="openssl-1.1.1k\ssl\record\record_local.h" />
+    <ClInclude Include="openssl-1.1.1k\ssl\ssl_cert_table.h" />
+    <ClInclude Include="openssl-1.1.1k\ssl\ssl_local.h" />
+    <ClInclude Include="openssl-1.1.1k\ssl\statem\statem.h" />
+    <ClInclude Include="openssl-1.1.1k\ssl\statem\statem_local.h" />
+    <ClInclude Include="project.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="runner.h" />
+    <ClInclude Include="utils.h" />
+    <ClInclude Include="wingetopt-0.95\getopt.h" />
+    <ClInclude Include="wrapper.h" />
+    <ClInclude Include="zlib-1.2.11\crc32.h" />
+    <ClInclude Include="zlib-1.2.11\deflate.h" />
+    <ClInclude Include="zlib-1.2.11\gzguts.h" />
+    <ClInclude Include="zlib-1.2.11\inffast.h" />
+    <ClInclude Include="zlib-1.2.11\inffixed.h" />
+    <ClInclude Include="zlib-1.2.11\inflate.h" />
+    <ClInclude Include="zlib-1.2.11\inftrees.h" />
+    <ClInclude Include="zlib-1.2.11\trees.h" />
+    <ClInclude Include="zlib-1.2.11\zconf.h" />
+    <ClInclude Include="zlib-1.2.11\zlib.h" />
+    <ClInclude Include="zlib-1.2.11\zutil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Project1.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="openssl-1.1.1k\fuzz\rand.inc" />
+    <None Include="Project1.aps" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="archive.cpp" />
+    <ClCompile Include="cJSON-1.7.14\cJSON.c" />
+    <ClCompile Include="cJSON-1.7.14\cJSON_Utils.c" />
+    <ClCompile Include="debug.cpp" />
+    <ClCompile Include="dir_utils.cpp" />
+    <ClCompile Include="env.cpp" />
+    <ClCompile Include="magic.cpp" />
+    <ClCompile Include="md5\md5.cpp" />
+    <ClCompile Include="Project1.cpp" />
+    <ClCompile Include="runner.cpp" />
+    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="wingetopt-0.95\getopt.c" />
+    <ClCompile Include="wrapper.cpp" />
+    <ClCompile Include="zlib-1.2.11\adler32.c" />
+    <ClCompile Include="zlib-1.2.11\compress.c" />
+    <ClCompile Include="zlib-1.2.11\crc32.c" />
+    <ClCompile Include="zlib-1.2.11\deflate.c" />
+    <ClCompile Include="zlib-1.2.11\gzclose.c" />
+    <ClCompile Include="zlib-1.2.11\gzlib.c" />
+    <ClCompile Include="zlib-1.2.11\gzread.c" />
+    <ClCompile Include="zlib-1.2.11\gzwrite.c" />
+    <ClCompile Include="zlib-1.2.11\infback.c" />
+    <ClCompile Include="zlib-1.2.11\inffast.c" />
+    <ClCompile Include="zlib-1.2.11\inflate.c" />
+    <ClCompile Include="zlib-1.2.11\inftrees.c" />
+    <ClCompile Include="zlib-1.2.11\trees.c" />
+    <ClCompile Include="zlib-1.2.11\uncompr.c" />
+    <ClCompile Include="zlib-1.2.11\zutil.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
