@@ -186,13 +186,13 @@ int main(int argc, char** argv)
 #if defined(RELEASE_MODE)
         string source = executable;
         string decompressed_dir = get_temp_directory();
+        //string decompressed_dir = workdir + "\\test";
         if (decompressed_dir == "")
             decompressed_dir = workdir + "\\" + get_filename(executable) + "-exec-temp";
 #else
         string source = workdir + "\\" + get_filename(executable) + "-attached.exe";
         string decompressed_dir = workdir + "\\" + get_filename(executable) + "-exec-temp";
 #endif
-
         printf("execute\n");
         run_program(source, decompressed_dir);
     }

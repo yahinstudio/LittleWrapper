@@ -78,5 +78,5 @@ string get_temp_directory()
     int result = GetTempPathA(PATH_MAX, temp_path);
     if (result > MAX_PATH || result == 0)
         return "";
-    return string(temp_path) + "\\" + PROJECT_NAME + "-" + get_filename(get_exe_path());
+    return string(temp_path) + PROJECT_NAME + "-" + get_filename(get_exe_path());
 }
