@@ -2,9 +2,13 @@
 #include <iostream>
 #include "cJSON-1.7.14/cJSON.h"
 
-// bool to_utf8(char* output_str, const wchar_t* wstr, size_t wstr_max_len);
+wchar_t* from_char_to_wchar(char* str);
 
-// bool from_utf8(wchar_t* output_wstr, const char* str, size_t wstr_max_len);
+char* from_wchar_to_char(wchar_t* wchar);
+
+bool to_utf8(char* output_str, const wchar_t* wstr, size_t wstr_max_len);
+
+bool from_utf8(wchar_t* output_wstr, const char* str, size_t wstr_max_len);
 
 std::string string_replace(std::string str, std::string oldstr, std::string newstr);
 
@@ -31,3 +35,5 @@ bool is_file_a_dir(std::string path);
 void remove_dir(std::string path);
 
 void show_dialog(std::string title, std::string text);
+
+void set_window_visible(bool visible);

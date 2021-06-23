@@ -3,13 +3,19 @@
 #include "utils.h"
 #include "assert.h" // assert()
 #include "windows.h"
+#include "project.h"
 
 using namespace std;
 
-void error_check(bool returnvalue)
+#if !defined(ENABLED_ERROR_CHECK)
+
+void error_check(bool expression, string err_msg)
 {
-	assert(returnvalue);
+	printf("error message: %s\n", err_msg.c_str());
+	assert(expression);
 }
+
+#endif
 
 string get_last_error_message()
 {

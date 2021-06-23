@@ -7,49 +7,68 @@
 #include "md5/md5.h"
 #include "direct.h" // rmdir()
 #include "winuser.h"
+#include "project.h"
 
 using namespace std;
 
-/* wchar_t to char* */
-// bool to_utf8(char* output_str, const wchar_t* wstr, size_t wstr_max_len)
-// {
-//     wstr_max_len = WideCharToMultiByte(CP_UTF8,              /* CodePage */
-//         0,                    /* dwFlags */
-//         wstr,                 /* lpWideCharStr */
-//         -1,                   /* cchWideChar - length in chars */
-//         output_str,           /* lpMultiByteStr */
-//         (DWORD)wstr_max_len,  /* cbMultiByte - length in bytes */
-//         NULL,                 /* lpDefaultChar */
-//         NULL                  /* lpUsedDefaultChar */
-//     );
+wchar_t* from_char_to_wchar(char* str)
+{
+    int len = MultiByteToWideChar(CP_UTF8, 0, str, strlen(str), 0, 0);
+    wchar_t* m_wchar = new wchar_t[len + 1];
+    MultiByteToWideChar(CP_UTF8, 0, str, strlen(str), m_wchar, len);
+    m_wchar[len] = '\0';
+    return m_wchar;
+}
 
-//     if (wstr_max_len == 0) 
-//     {
-//         printf("Failed to encode wchar_t as UTF-8.\n");
-//         return false;
-//     }
-//     return true;
-// }
+char* from_wchar_to_char(wchar_t* wchar)
+{
+    int len = WideCharToMultiByte(CP_ACP, 0, wchar, wcslen(wchar), NULL, 0, NULL, NULL);
+    char* m_char = new char[len + 1];
+    WideCharToMultiByte(CP_ACP, 0, wchar, wcslen(wchar), m_char, len, NULL, NULL);
+    m_char[len] = '\0';
+    return m_char;
+}
+
+/* wchar_t to char* */
+bool to_utf8(char* output_str, const wchar_t* wstr, size_t wstr_max_len)
+{
+    wstr_max_len = WideCharToMultiByte(CP_UTF8,              /* CodePage */
+        0,                    /* dwFlags */
+        wstr,                 /* lpWideCharStr */
+        -1,                   /* cchWideChar - length in chars */
+        output_str,           /* lpMultiByteStr */
+        (DWORD)wstr_max_len,  /* cbMultiByte - length in bytes */
+        NULL,                 /* lpDefaultChar */
+        NULL                  /* lpUsedDefaultChar */
+    );
+
+    if (wstr_max_len == 0) 
+    {
+        printf("Failed to encode wchar_t as UTF-8.\n");
+        return false;
+    }
+    return true;
+}
 
 
 /* char* to wchar_t*/
-// bool from_utf8(wchar_t* output_wstr, const char* str, size_t wstr_max_len)
-// {
-//     wstr_max_len = MultiByteToWideChar(CP_UTF8,              /* CodePage */
-//         0,                    /* dwFlags */
-//         str,                  /* lpMultiByteStr */
-//         -1,                   /* cbMultiByte - length in bytes */
-//         output_wstr,          /* lpWideCharStr */
-//         (DWORD)wstr_max_len   /* cchWideChar - length in chars */
-//     );
+bool from_utf8(wchar_t* output_wstr, const char* str, size_t wstr_max_len)
+{
+    wstr_max_len = MultiByteToWideChar(CP_UTF8,              /* CodePage */
+        0,                    /* dwFlags */
+        str,                  /* lpMultiByteStr */
+        -1,                   /* cbMultiByte - length in bytes */
+        output_wstr,          /* lpWideCharStr */
+        (DWORD)wstr_max_len   /* cchWideChar - length in chars */
+    );
 
-//     if (wstr_max_len == 0) 
-//     {
-//         printf("failed to decode wchar_t from UTF-8.\n");
-//         return false;
-//     }
-//     return true;
-// }
+    if (wstr_max_len == 0) 
+    {
+        printf("failed to decode wchar_t from UTF-8.\n");
+        return false;
+    }
+    return true;
+}
 
 string string_replace(string str, string oldstr, string newstr)
 {
@@ -169,7 +188,7 @@ bool check_path(string path)
 
 bool file_exists(string path)
 {
-    return access(path.c_str(), 0) == 0;
+    return _access(path.c_str(), 0) == 0;
 }
 
 bool string_starts_with(string str, string starts_with)
@@ -216,9 +235,8 @@ void remove_dir(string path)
         } while (_findnext(handle, &find) != -1);
         _findclose(handle);
 
-        // ɾ��
         if (is_file_a_dir(path))
-            rmdir(path.c_str());
+            _rmdir(path.c_str());
         else
             remove(path.c_str());
     }
@@ -226,5 +244,16 @@ void remove_dir(string path)
 
 void show_dialog(string title, string text)
 {
+    printf("dialog: %s: %s\n", title.c_str(), text.c_str());
     int result = MessageBoxA(nullptr, text.c_str(), title.c_str(), MB_ICONERROR | MB_OK);
+}
+
+void set_window_visible(bool visible)
+{
+    // 隐藏console窗口
+#if !defined(WINDOW_MODE)
+    HWND hwnd = FindWindowA("ConsoleWindowClass", NULL);
+    if (hwnd)
+        ShowWindowAsync(hwnd, visible ? SW_SHOW : SW_HIDE);
+#endif
 }

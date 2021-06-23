@@ -11,17 +11,16 @@
 #include "project.h"
 #include "windows.h"
 
+// 程序读取自身而不是-attach.exe文件
+#define RELEASE_MODE
+
 using namespace std;
 
 uint8_t preserveSection[PRESERVE_LEN] = MAGIC_HEADER "{\"offset\":0, \"len\":0}";
 
-#if defined(NDEBUG)
-#define RELEASE_MODE
-#endif
-
 void output_help()
 {
-    printf("\nSub commands available:\n");
+    printf("Sub commands available:\n");
     printf("  - help\n");
     printf("  - attach <data_folder>\n");
     printf("  - attach-no-hash <data_folder>\n");
@@ -30,48 +29,32 @@ void output_help()
     printf("  - export\n");
 }
 
+#if defined(WINDOW_MODE)
+int main(int argc, char** argv);
+int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow)
+{
+    // 转换参数
+    int argc = 0;
+    wchar_t** wargv;
+    char** argv = new char* [argc];
+
+    wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
+
+    for (int i = 0; i < argc; i++)
+        argv[i] = from_wchar_to_char(wargv[i]);
+
+    main(argc, argv);
+}
+#endif
+
 int main(int argc, char** argv)
 {
     //parseArguments(argc, argv);
-    max(preserveSection[0], preserveSection[1]);
-    printf("%s v%s\n", PROJECT_NAME, VERSION_TEXT);
-    //printf("<%s>\n\n", preserveSection);
+    printf("%s v%s\n\n", PROJECT_NAME, VERSION_TEXT);
+    printf("preserveSection: %s\n", (char*)preserveSection + MAGIC_LEN);
 
     string executable = get_exe_path();
-
-    //printf(executable.c_str());
-    //printf("\n");
-
-    //std::fstream fs(executable, std::fstream::in | std::fstream::binary);
-    //uint64_t offset = get_magic_offset(fs, preserveSection, MAGIC_LEN);
-
-    //fs.clear();
-    //fs.seekg(offset, fs.beg);
-    //char str[PRESERVE_LEN];
-    //fs.getline(str, PRESERVE_LEN);
-
-    //printf("offset: %llx\n", offset);
-    //printf("string: <%s>\n", str);
-
-    //char* metadata = (char*)preserveSection + MAGIC_LEN;
-    //printf("meta: %s\n", metadata);
-
-    //cJSON* json = cJSON_Parse(metadata);
-    //cJSON* jump = cJSON_GetObjectItem(json, "jump");
-
-    //printf("jump: %d\n", jump->valueint);
-
-    //cJSON_Delete(json);
-
     string workdir = get_current_work_dir();
-    //string fin = workdir + "\\test.txt";
-    //string fout = workdir + "\\test.txt.zlib";
-    //string fout2 = workdir + "\\test2.txt";
-
-    //printf("fin: %s\nfout: %s\n", fin.c_str(), fout.c_str());
-
-    //printf("ret: %d\n", deflate_file(fin, fout));
-    //printf("ret: %d\n", inflate_file(fout, fout2));
 
     option longops[] = {
         {"help",            no_argument      , 0,  0},
@@ -82,8 +65,6 @@ int main(int argc, char** argv)
         {"export",          no_argument,       0,  5},
         {0, 0, 0, 0}
     };
-
-    //printf("check %d\n", string::npos);
     
     int ch;
     while ((ch = getopt_long_only(argc, argv, ":", longops, 0)) != -1)
@@ -212,7 +193,7 @@ int main(int argc, char** argv)
         string decompressed_dir = workdir + "\\" + get_filename(executable) + "-exec-temp";
 #endif
 
-        printf("run\n");
+        printf("execute\n");
         run_program(source, decompressed_dir);
     }
     
