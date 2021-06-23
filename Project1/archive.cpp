@@ -12,8 +12,8 @@ bool deflate_file(std::string fileIn, std::string fileOut)
     std::fstream fin(fileIn, std::fstream::in | std::fstream::binary);
     std::fstream fout(fileOut, std::fstream::out | std::fstream::binary | std::fstream::trunc);
 
-    error_check(!fin.fail());
-    error_check(!fout.fail());
+    error_check(!fin.fail(), "deflate_file: could not open the in-file to deflate: " + fileIn);
+    error_check(!fout.fail(), "deflate_file: could not open the out-file to deflate: " + fileOut);
 
     int ret, flush;
     unsigned have;
@@ -33,7 +33,7 @@ bool deflate_file(std::string fileIn, std::string fileOut)
 
     do {
         fin.read((char*)in, CHUNK);
-        error_check(!fin.bad());
+        error_check(!fin.bad(), "deflate_file: could not read the in-file to deflate: " + fileIn);
         strm.avail_in = fin.gcount();
         flush = strm.avail_in > 0 ? Z_NO_FLUSH : Z_FINISH;
         strm.next_in = in;
@@ -43,14 +43,14 @@ bool deflate_file(std::string fileIn, std::string fileOut)
             strm.next_out = out;
 
             ret = deflate(&strm, flush);
-            error_check(ret != Z_STREAM_ERROR);
+            error_check(ret != Z_STREAM_ERROR, "deflate_file: unexpected deflate() return value: " + std::to_string(ret));
 
             have = CHUNK - strm.avail_out;
             fout.write((char*)out, have);
-            error_check(!fout.bad());
+            error_check(!fout.bad(), "deflate_file: could not write the out-file to deflate: " + fileOut);
         } while (strm.avail_out == 0);
 
-        error_check(strm.avail_in == 0);
+        error_check(strm.avail_in == 0, "deflate_file: unexpected value: strm.avail_in == " + std::to_string(strm.avail_in));
     } while (flush != Z_FINISH);
 
     deflateEnd(&strm);
@@ -68,8 +68,8 @@ bool inflate_file(std::string fileIn, std::string fileOut)
     std::fstream fin(fileIn, std::fstream::in | std::fstream::binary);
     std::fstream fout(fileOut, std::fstream::out | std::fstream::binary | std::fstream::trunc);
 
-    error_check(!fin.fail());
-    error_check(!fout.fail());
+    error_check(!fin.fail(), "inflate_file: could not open the in-file to inflate: " + fileIn);
+    error_check(!fout.fail(), "inflate_file: could not open the out-file to inflate: " + fileOut);
 
     int ret;
     unsigned have;
@@ -99,7 +99,7 @@ bool inflate_file(std::string fileIn, std::string fileOut)
             strm.next_out = out;
 
             ret = inflate(&strm, Z_NO_FLUSH);
-            error_check(ret != Z_STREAM_ERROR);
+            error_check(ret != Z_STREAM_ERROR, "inflate_file: unexpected inflate() return value: " + std::to_string(ret));
 
             switch (ret)
             {
@@ -130,8 +130,8 @@ bool inflate_to_file(std::fstream& fileIn, uint64_t offset, uint64_t length, std
 {
     std::fstream fout(fileOut, std::fstream::out | std::fstream::binary | std::fstream::trunc);
 
-    error_check(!fileIn.fail());
-    error_check(!fout.fail());
+    error_check(!fileIn.fail(), "inflate_to_file: could not open the in-file(binary) to inflate");
+    error_check(!fout.fail(), "inflate_to_file: could not open the out-file to inflate: " + fileOut);
 
     fileIn.clear();
     fileIn.seekg(offset);
@@ -168,7 +168,7 @@ bool inflate_to_file(std::fstream& fileIn, uint64_t offset, uint64_t length, std
             strm.next_out = out;
 
             ret = inflate(&strm, Z_NO_FLUSH);
-            error_check(ret != Z_STREAM_ERROR);
+            error_check(ret != Z_STREAM_ERROR, "inflate_file: unexpected inflate() return value: " + std::to_string(ret));
 
             switch (ret)
             {

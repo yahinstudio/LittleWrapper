@@ -20,7 +20,7 @@ static void execute_shell(string temp_dir, string start_script)
 	string workdir = get_current_work_dir();
 
 	std::fstream ms(start_script, fstream::in | fstream::binary);
-	error_check(!ms.fail());
+	error_check(!ms.fail(), "execute_shell: could not open the start-script file: " + start_script);
 
 	ms.seekg(0, ms.end);
 	int file_len = ms.tellg();
@@ -29,7 +29,7 @@ static void execute_shell(string temp_dir, string start_script)
 	char* cmd = new char[file_len + 1];
 	memset(cmd, 0, file_len + 1);
 	ms.read(cmd, file_len);
-	error_check(!ms.bad());
+	error_check(!ms.bad(), "execute_shell: could not read from the start-script file: " + start_script);
 	ms.close();
 
 	string command = cmd;
@@ -63,7 +63,7 @@ static void start_child_process(string temp_dir, string start_script)
 	string workdir = get_current_work_dir();
 
 	std::fstream ms(start_script, fstream::in | fstream::binary);
-	error_check(!ms.fail());
+	error_check(!ms.fail(), "execute_shell: could not open the start-script file: " + start_script);
 
 	ms.seekg(0, ms.end);
 	int file_len = ms.tellg();
@@ -72,7 +72,7 @@ static void start_child_process(string temp_dir, string start_script)
 	char* cmd = new char[file_len + 1];
 	memset(cmd, 0, file_len + 1);
 	ms.read(cmd, file_len);
-	error_check(!ms.bad());
+	error_check(!ms.bad(), "execute_shell: could not read from the start-script file: " + start_script);
 	ms.close();
 
 	string command = cmd;
@@ -82,6 +82,7 @@ static void start_child_process(string temp_dir, string start_script)
 	{
 		printf("the main command could not be empty!\n");
 		show_dialog(PROJECT_NAME, "主脚本_start.txt内没有任何内容");
+		set_window_visible(true);
 		return;
 	}
 	//command = "cd /D \"" + temp_dir + "\" && " + command;
@@ -158,9 +159,11 @@ void run_program(string file, string temp_dir)
 		show_dialog(PROJECT_NAME, "_start.txt不是一个文件");
 		return;
 	}
-
+	
+	set_window_visible(false);
 	printf("temp dir: %s\n", temp_dir.c_str());
 
 	// execute_shell(temp_dir, main_script);
 	start_child_process(temp_dir, main_script);
+	set_window_visible(true);
 }

@@ -155,7 +155,7 @@ static pair<uint32_t, uint32_t> write_binaries(fstream& fout, string data_dir, s
         auto compressed_file = temp_compressed_dir + "\\" + string_replace(item.second, "/", "\\");
         std::fstream fin(compressed_file, std::fstream::in | std::fstream::binary);
 
-        error_check(!fin.fail());
+        error_check(!fin.fail(), "write_binaries: could not open the target-file to extract: " + compressed_file);
 
         int buf_len = 16 * 1024;
         uint8_t* buf = new uint8_t[buf_len];
@@ -163,15 +163,15 @@ static pair<uint32_t, uint32_t> write_binaries(fstream& fout, string data_dir, s
         uint32_t readBytes = 0;
         do {
             fin.read((char*)buf, buf_len);
-            error_check(!fin.bad());
+            error_check(!fin.bad(), "write_binaries: could not read the target-file: " + compressed_file);
             readBytes = fin.gcount();
 
             fout.write((char*)buf, readBytes);
-            error_check(!fout.bad());
+            error_check(!fout.bad(), "write_binaries: could not write the binary");
         } while (readBytes > 0);
 
         fout.write((char*)split_data, split_data_len);
-        error_check(!fout.bad());
+        error_check(!fout.bad(), "write_binaries: could not write the splite data to the binary");
         fin.close();
     }
 
@@ -182,13 +182,11 @@ void attach_binaries(string fileIn, string fileOut, string data_dir, string temp
 {
     std::fstream fin(fileIn, std::fstream::in | std::fstream::binary);
     std::fstream fout(fileOut, std::fstream::out | std::fstream::binary | std::fstream::trunc);
-
-    error_check(!fin.fail());
-    error_check(!fout.fail());
+    error_check(!fin.fail(), "attach_binaries: could not open the in-file: " + fileIn);
+    error_check(!fout.fail(), "attach_binaries: could not open the out-file: " + fileIn);
 
     // 获取magic位置
     auto magic_offset = get_magic_offset(fin, (uint8_t*)MAGIC_HEADER, MAGIC_LEN);
-
     if (magic_offset == 0)
     {
         printf("Can not locate the magic-header in the executable file.\n");
@@ -203,15 +201,15 @@ void attach_binaries(string fileIn, string fileOut, string data_dir, string temp
     int readBytes = 0;
     do {
         fin.read((char*)buf, buf_size);
-        error_check(!fin.bad());
+        error_check(!fin.bad(), "attach_binaries: could not copy the binary: read");
         readBytes = fin.gcount();
         fout.write((char*)buf, readBytes);
-        error_check(!fout.bad());
+        error_check(!fout.bad(), "attach_binaries: could not copy the binary: write");
     } while (readBytes > 0);
 
     // 准备临时目录用来存放压缩后的数据
     if (!file_exists(temp_compressed_dir))
-        error_check(!mkdir(temp_compressed_dir.c_str()));
+        error_check(!_mkdir(temp_compressed_dir.c_str()), "attach_binaries: could not create the temp dir: " + temp_compressed_dir);
     printf("tempdir: %s\n", temp_compressed_dir.c_str());
 
     // 写metadata
@@ -238,7 +236,7 @@ void attach_binaries(string fileIn, string fileOut, string data_dir, string temp
 int extract_binaries(string fileIn, string extract_dir)
 {
     fstream fin(fileIn, fstream::in | fstream::binary);
-    error_check(!fin.fail());
+    error_check(!fin.fail(), "extract_binaries: could not open the file to extract: " + fileIn);
 
     // 读取jumpdata
     uint64_t jumpdata_offset = get_magic_offset(fin, (uint8_t*)MAGIC_HEADER, MAGIC_LEN) + MAGIC_LEN;
@@ -252,7 +250,7 @@ int extract_binaries(string fileIn, string extract_dir)
     fin.seekg(jumpdata_offset);
     char* jumpdata = new char[PRESERVE_LEN - MAGIC_LEN];
     fin.read((char*)jumpdata, PRESERVE_LEN - MAGIC_LEN);
-    error_check(!fin.bad());
+    error_check(!fin.bad(), "extract_binaries: could not read the jumpdata: " + fileIn);
 
     // 解析jumpdata
     cJSON* json = cJSON_Parse(jumpdata);
@@ -276,7 +274,7 @@ int extract_binaries(string fileIn, string extract_dir)
     char* meta_buf = new char[metadata_len + 1];
     //memset(meta_buf, 0, metadata_len2);
     fin.read(meta_buf, metadata_len + 1);
-    error_check(!fin.bad());
+    error_check(!fin.bad(), "extract_binaries: could not read the metadata: " + fileIn);
 
     printf("metadata offset: 0x%llx, len: %lld\n", metadata_addr, metadata_len);
 
@@ -297,16 +295,13 @@ int extract_binaries(string fileIn, string extract_dir)
     //delete[] pretty;
 
     // 清理临时文件，使其重新解压
-    if (check_hash)
-    {
-        if (file_exists(extract_dir))
-            remove_dir(extract_dir);
-    }
+    if (check_hash && file_exists(extract_dir))
+        remove_dir(extract_dir);
 
     // 建立根目录
     string decompressed = extract_dir;
     if (!file_exists(decompressed))
-        error_check(!mkdir(decompressed.c_str()));
+        error_check(!_mkdir(decompressed.c_str()), "extract_binaries: could not create the extract-dir: " + decompressed);
 
     // 建立所有的文件夹(directories字段)
     for (int i = 0; i < cJSON_GetArraySize(directories); i++)
@@ -316,7 +311,7 @@ int extract_binaries(string fileIn, string extract_dir)
 
         string cdir = decompressed + "\\" + string_replace(dir, "/", "\\");
         if (!file_exists(cdir))
-            error_check(!mkdir(cdir.c_str()));
+            error_check(!_mkdir(cdir.c_str()), "extract_binaries: could not create the dir by the bounds: " + decompressed);
     }
 
     // 解压binaries
@@ -379,7 +374,7 @@ int extract_binaries(string fileIn, string extract_dir)
 void detail_binaries(string fileIn, string export_file)
 {
     fstream fin(fileIn, fstream::in | fstream::binary);
-    error_check(!fin.fail());
+    error_check(!fin.fail(), "detail_binaries: could not open the file to detail: " + fileIn);
 
     // 读取jumpdata
     uint64_t jumpdata_offset = get_magic_offset(fin, (uint8_t*)MAGIC_HEADER, MAGIC_LEN) + MAGIC_LEN;
@@ -393,9 +388,9 @@ void detail_binaries(string fileIn, string export_file)
     fin.seekg(jumpdata_offset);
     char* jumpdata = new char[PRESERVE_LEN - MAGIC_LEN];
     fin.read((char*)jumpdata, PRESERVE_LEN - MAGIC_LEN);
-    error_check(!fin.bad());
+    error_check(!fin.bad(), "detail_binaries: could not read the jumpdata_offset: " + fileIn);
 
-    printf("jumpdata: %s\n", jumpdata);
+    printf("jumpdata at: 0x%llx\n%s\n", jumpdata_offset, jumpdata);
 
     // 解析jumpdata
     cJSON* json = cJSON_Parse(jumpdata);
@@ -423,7 +418,7 @@ void detail_binaries(string fileIn, string export_file)
     char* meta_buf = new char[metadata_len + 1];
     //memset(meta_buf, 0, metadata_len2);
     fin.read(meta_buf, metadata_len + 1);
-    error_check(!fin.bad());
+    error_check(!fin.bad(), "detail_binaries: could not read the metadata: " + fileIn);
 
     printf("metadata offset: 0x%llx, len: %lld\n", metadata_addr, metadata_len);
 
@@ -475,9 +470,9 @@ void detail_binaries(string fileIn, string export_file)
         printf("----------\n");
     } else {
         std::fstream fout(export_file, std::fstream::out | std::fstream::trunc);
-        error_check(!fout.fail());
+        error_check(!fout.fail(), "detail_binaries: could not open the export-file: " + export_file);
         fout.write(pretty, strlen(pretty));
-        error_check(!fout.fail());
+        error_check(!fout.fail(), "detail_binaries: could not write to the export-file: " + export_file);
         fout.close();
         printf("detail wrote: %s\n", export_file.c_str());
     }

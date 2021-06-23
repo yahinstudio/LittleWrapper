@@ -21,11 +21,11 @@ string get_exe_path()
 string get_current_work_dir()
 {
     char cwd[PATH_MAX];
-    getcwd(cwd, PATH_MAX);
+    _getcwd(cwd, PATH_MAX);
     return string(cwd);
 }
 
 void changed_current_work_dir(string newdir)
 {
-    chdir(newdir.c_str());
+    _chdir(newdir.c_str());
 }
