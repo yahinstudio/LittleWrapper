@@ -350,7 +350,7 @@ int extract_binaries(string fileIn, string extract_dir)
         // 如果文件大小和校验一样，则跳过解压，重复使用
         if (file_exists(target_file) && 
             get_file_length(target_file) == raw_size && 
-            get_file_md5(target_file) == raw_hash
+            (check_hash || get_file_md5(target_file) == raw_hash)
             )
         {
             printf("reuse: %s\n", raw_path.c_str());
