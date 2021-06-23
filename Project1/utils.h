@@ -28,6 +28,8 @@ bool check_path(std::string path);
 
 bool file_exists(std::string path);
 
+bool file_exists2(std::string path);
+
 bool string_starts_with(std::string str, std::string starts_with);
 
 bool is_file_a_dir(std::string path);

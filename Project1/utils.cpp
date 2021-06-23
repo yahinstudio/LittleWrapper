@@ -191,6 +191,13 @@ bool file_exists(string path)
     return _access(path.c_str(), 0) == 0;
 }
 
+// 判断文件或文件夹是否存在
+bool file_exists2(string path)
+{
+    DWORD dwAttrib = GetFileAttributesA(path.c_str());
+    return INVALID_FILE_ATTRIBUTES != dwAttrib;
+}
+
 bool string_starts_with(string str, string starts_with)
 {
     return str.find(starts_with) == 0;

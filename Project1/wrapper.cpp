@@ -294,10 +294,6 @@ int extract_binaries(string fileIn, string extract_dir)
     delete[] meta_buf;
     //delete[] pretty;
 
-    // 清理临时文件，使其重新解压
-    if (check_hash && file_exists(extract_dir))
-        remove_dir(extract_dir);
-
     // 建立根目录
     string decompressed = extract_dir;
     if (!file_exists(decompressed))
