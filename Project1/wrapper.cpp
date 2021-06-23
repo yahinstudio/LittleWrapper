@@ -62,7 +62,7 @@ static vector<pair<string, string>> compress_dir(cJSON* file_arr, std::string da
         {
             string relative_file = relativePath + name;
             // string key = string_replace(relative_file, "/", "___") + ".zlib";
-            string key = get_string_md5(string_replace(relative_file, "/", "___") + ".zlib");
+            string key = get_string_md5(string_replace(relative_file, "/", "___")) + ".zlib";
             result.push_back(pair(relative_file, key));
 
             string from = data_dir + "\\" + relative_file;
