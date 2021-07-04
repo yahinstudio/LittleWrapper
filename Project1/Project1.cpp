@@ -57,6 +57,7 @@ int main(int argc, char** argv)
     string workdir = get_current_work_dir();
 
     option longops[] = {
+        //{"test",            no_argument      , 0,  8},
         {"help",            no_argument      , 0,  0},
         {"attach",          required_argument, 0,  1},
         {"attach-no-hash",  required_argument, 0,  2},
@@ -71,6 +72,11 @@ int main(int argc, char** argv)
     {
         switch (ch)
         {
+        //case 8: // test
+        //    printf("isRel: %d\n", is_relative_path("s/d"));
+        //    printf("isRel: %d\n", is_relative_path("asfsaf/sdasf"));
+        //    printf("isRel: %d\n", is_relative_path("desktop - pu9pnlp\\d"));
+        //    break;
         case 0: // help
             output_help();
             break;
@@ -82,8 +88,18 @@ int main(int argc, char** argv)
                 printf("the data_dir path could not contain . or ..\ndata_dir inputed: %s\n", optarg);
                 return 1;
             }
-            bool starts_with_slash = string_starts_with(string_replace(optarg, "/", "\\"), "\\");
-            string data_dir = workdir + (starts_with_slash ? "" : "\\") + optarg;
+
+            string data_dir = "";
+            // 判断是不是相对路径
+            
+            if (is_relative_path(optarg))
+            {
+                bool starts_with_slash = string_starts_with(string_replace(optarg, "/", "\\"), "\\");
+                data_dir = workdir + (starts_with_slash ? "" : "\\") + optarg;
+            } else {
+                data_dir = optarg;
+            }
+            
             if (!file_exists(data_dir))
             {
                 printf("the data_dir could not be found: %s\n", data_dir.c_str());
@@ -194,8 +210,6 @@ int main(int argc, char** argv)
         string decompressed_dir = workdir + "\\" + get_filename(executable) + "-exec-temp";
 #endif
         printf("execute\n");
-        run_program(source, decompressed_dir);
+        return run_program(source, decompressed_dir);
     }
-    
-    return 0;
 }

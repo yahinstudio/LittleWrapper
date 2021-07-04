@@ -39,3 +39,5 @@ void remove_dir(std::string path);
 void show_dialog(std::string title, std::string text);
 
 void set_window_visible(bool visible);
+
+bool is_relative_path(std::string path);

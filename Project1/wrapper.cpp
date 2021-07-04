@@ -137,14 +137,14 @@ static pair<uint32_t, uint32_t> write_binaries(fstream& fout, string data_dir, s
     }
 
     // Ğ´³öÊı¾İ
-    char* m2 = cJSON_Print(metadata);
+    //char* m2 = cJSON_Print(metadata);
     char* m3 = cJSON_PrintUnformatted(metadata);
     int metadata_len = strlen(m3);
     //cout << m2 << endl;
-    printf("%s\n", m2);
+    //printf("%s\n", m2);
     fout.write(m3, strlen(m3));
     fout.write((char*)split_data, split_data_len);
-    free(m2);
+    //free(m2);
     free(m3);
     cJSON_Delete(metadata);
 

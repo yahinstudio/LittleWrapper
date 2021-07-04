@@ -118,7 +118,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;HAVE_CONFIG_H;_DEBUG;_CONSOLE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -131,7 +131,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;HAVE_CONFIG_H;_DEBUG;_CONSOLE;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -146,7 +146,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;HAVE_CONFIG_H;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <Optimization>MinSpace</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -458,6 +458,16 @@
     <ClInclude Include="openssl-1.1.1k\ssl\ssl_local.h" />
     <ClInclude Include="openssl-1.1.1k\ssl\statem\statem.h" />
     <ClInclude Include="openssl-1.1.1k\ssl\statem\statem_local.h" />
+    <ClInclude Include="pcre2-10.37\config.h" />
+    <ClInclude Include="pcre2-10.37\pcre2.h" />
+    <ClInclude Include="pcre2-10.37\pcre2_internal.h" />
+    <ClInclude Include="pcre2-10.37\pcre2_intmodedep.h" />
+    <ClInclude Include="pcre2-10.37\pcre2_jit_neon_inc.h" />
+    <ClInclude Include="pcre2-10.37\pcre2_jit_simd_inc.h" />
+    <ClInclude Include="pcre2-10.37\pcre2_ucp.h" />
+    <ClInclude Include="pcre2-10.37\sljit\sljitConfig.h" />
+    <ClInclude Include="pcre2-10.37\sljit\sljitConfigInternal.h" />
+    <ClInclude Include="pcre2-10.37\sljit\sljitLir.h" />
     <ClInclude Include="project.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="runner.h" />

@@ -264,3 +264,13 @@ void set_window_visible(bool visible)
         ShowWindowAsync(hwnd, visible ? SW_SHOW : SW_HIDE);
 #endif
 }
+
+bool is_relative_path(string path)
+{
+    path = string_replace(path, "/", "\\");
+    string disks = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    bool is_abs = path.length() >= 2 && disks.find(path[0]) != string::npos && path[1] == ':';
+    bool is_netdisk = path.length() >= 2 && path[0] == '\\' && path[1] == '\\';
+    //cout << "isabs: " << is_abs << "  is_netdisk: " << is_netdisk << endl;
+    return !(is_abs || is_netdisk);
+}
