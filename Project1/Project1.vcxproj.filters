@@ -834,6 +834,36 @@
     <ClInclude Include="debug.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="pcre2-10.37\sljit\sljitConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pcre2-10.37\sljit\sljitConfigInternal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pcre2-10.37\sljit\sljitLir.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pcre2-10.37\pcre2_internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pcre2-10.37\pcre2_intmodedep.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pcre2-10.37\pcre2_jit_neon_inc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pcre2-10.37\pcre2_jit_simd_inc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pcre2-10.37\pcre2_ucp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pcre2-10.37\config.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pcre2-10.37\pcre2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project1.rc">
