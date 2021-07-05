@@ -47,7 +47,7 @@ static cJSON* get_dirs(cJSON* file_arr, string relativePath = "")
 }
 
 // 返回pair<relative_path, key>
-static vector<pair<string, string>> compress_dir(cJSON* file_arr, std::string data_dir, string temp_compressed_dir, string relativePath = "")
+static vector<pair<string, string>> compress_dir(cJSON* file_arr, std::string source_dir, string temp_compressed_dir, string relativePath = "")
 {
     vector<pair<string, string>> result;
 
@@ -65,7 +65,7 @@ static vector<pair<string, string>> compress_dir(cJSON* file_arr, std::string da
             string key = get_string_md5(string_replace(relative_file, "/", "___")) + ".zlib";
             result.push_back(pair(relative_file, key));
 
-            string from = data_dir + "\\" + relative_file;
+            string from = source_dir + "\\" + relative_file;
             string to = temp_compressed_dir + "\\" + key;
 
             printf("compressing: %s\n", relative_file.c_str());
@@ -73,7 +73,7 @@ static vector<pair<string, string>> compress_dir(cJSON* file_arr, std::string da
             deflate_file(from, to);
         } else {
             cJSON* children = cJSON_GetObjectItem(item, "children");
-            auto r = compress_dir(children, data_dir, temp_compressed_dir, relativePath + name + "/");
+            auto r = compress_dir(children, source_dir, temp_compressed_dir, relativePath + name + "/");
             for (auto it = r.begin(); it != r.end(); ++it)
                 result.push_back(*it);
         }
@@ -98,19 +98,20 @@ static string generate_jumpdata(uint64_t offset, uint64_t len)
 }
 
 // 返回元数据的地址,长度
-static pair<uint32_t, uint32_t> write_binaries(fstream& fout, string data_dir, string temp_compressed_dir, bool check_hash)
+static pair<uint32_t, uint32_t> write_binaries(fstream& fout, string source_dir, string temp_compressed_dir, bool check_hash, string exec)
 {
     auto metadata_addr = (uint32_t)fout.tellp();
 
     cJSON* metadata = cJSON_CreateObject();
-    cJSON* arr = dir_struct_to_json_in_list(generate_dir_struct(data_dir));
+    cJSON* arr = dir_struct_to_json_in_list(generate_dir_struct(source_dir));
     //cJSON_AddItemToObject(metadata, "struct", arr);
     cJSON_AddNumberToObject(metadata, "version", 1);
     cJSON_AddBoolToObject(metadata, "check_hash", check_hash);
+    cJSON_AddStringToObject(metadata, "exec", exec.c_str());
     cJSON_AddItemToObject(metadata, "directories", get_dirs(arr));
 
     // 生成二进制数据地址表
-    auto t = compress_dir(arr, data_dir, temp_compressed_dir);
+    auto t = compress_dir(arr, source_dir, temp_compressed_dir);
 
     cJSON* address_table = cJSON_AddObjectToObject(metadata, "address_table");
     uint32_t addr_offset = 0;
@@ -121,7 +122,7 @@ static pair<uint32_t, uint32_t> write_binaries(fstream& fout, string data_dir, s
         auto offset = addr_offset;
         auto len = get_file_length(compressed_file);
         auto hash = get_file_md5(compressed_file);
-        auto raw_file = data_dir + "\\" + item.first;
+        auto raw_file = source_dir + "\\" + item.first;
         auto raw_length = get_file_length(raw_file);
         auto raw_hash = get_file_md5(raw_file);
 
@@ -178,7 +179,7 @@ static pair<uint32_t, uint32_t> write_binaries(fstream& fout, string data_dir, s
     return pair(metadata_addr, metadata_len);
 }
 
-void attach_binaries(string fileIn, string fileOut, string data_dir, string temp_compressed_dir, bool check_hash)
+void pack_binaries(string fileIn, string fileOut, string source_dir, string temp_compressed_dir, bool check_hash, string exec)
 {
     std::fstream fin(fileIn, std::fstream::in | std::fstream::binary);
     std::fstream fout(fileOut, std::fstream::out | std::fstream::binary | std::fstream::trunc);
@@ -213,8 +214,8 @@ void attach_binaries(string fileIn, string fileOut, string data_dir, string temp
     printf("tempdir: %s\n", temp_compressed_dir.c_str());
 
     // 写metadata
-    printf("generate directory strcuture for %s\n", data_dir.c_str());
-    auto metadata_pair = write_binaries(fout, data_dir, temp_compressed_dir, check_hash);
+    printf("generate directory strcuture for %s\n", source_dir.c_str());
+    auto metadata_pair = write_binaries(fout, source_dir, temp_compressed_dir, check_hash, exec);
     uint32_t metadata_addr = metadata_pair.first;
     uint32_t metatada_len = metadata_pair.second;
 
@@ -233,7 +234,7 @@ void attach_binaries(string fileIn, string fileOut, string data_dir, string temp
 }
 
 // 1: 找不到jumpdata   2: 找不到metadata  3:数据损坏  4:无效jumpdata  5:无效metadata
-int extract_binaries(string fileIn, string extract_dir)
+int extract_binaries(string fileIn, string extract_dir, string* exec)
 {
     fstream fin(fileIn, fstream::in | fstream::binary);
     error_check(!fin.fail(), "extract_binaries: could not open the file to extract: " + fileIn);
@@ -280,19 +281,17 @@ int extract_binaries(string fileIn, string extract_dir)
 
     // 解析元数据
     cJSON* meta_json = cJSON_Parse(meta_buf);
+    delete[] meta_buf;
     if (meta_json == nullptr)
-    {
         return 5;
-        delete[] meta_buf;
-    }
+
     bool check_hash = cJSON_GetObjectItem(meta_json, "check_hash")->valueint != 0;
     cJSON* directories = cJSON_GetObjectItem(meta_json, "directories");
     cJSON* addr_table = cJSON_GetObjectItem(meta_json, "address_table");
+    cJSON* m_exec = cJSON_GetObjectItem(meta_json, "exec");
 
-    //char* pretty = cJSON_Print(meta_json);
-    //printf("----------\n%s\n----------\n", pretty);
-    delete[] meta_buf;
-    //delete[] pretty;
+    if (exec != nullptr)
+        exec->assign(m_exec->valuestring);
 
     // 建立根目录
     string decompressed = extract_dir;
