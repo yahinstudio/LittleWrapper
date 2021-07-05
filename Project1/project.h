@@ -6,7 +6,7 @@
 #define ENABLED_ERROR_CHECK
 
 #define PROJECT_NAME "LittleWrapper"
-#define VERSION_TEXT "1.0.2"
+#define VERSION_TEXT "1.0.3"
 #define PROJ_VER PROJECT_NAME " v" VERSION_TEXT
 
 #define PATH_MAX 256
@@ -25,4 +25,9 @@
   1. 使用路径MD5命名临时文件，放置冲突
   2. 重写参数处理相关代码
   3. 使用command参数代替_start.txt文件
+
+1.0.3: 2021年7月5日:
+  1. 修正一些调试信息的文本错误
+  2. 修复不能为输出文件自动创建父目录的问题
+  3. 加大error_check()的缓冲区大小
 */

@@ -116,24 +116,24 @@ int run_program(string file, string temp_dir)
 	switch (extract_binaries(file, temp_dir, &exec))
 	{
 	case 1:
-		show_dialog(PROJ_VER, "程序损坏，无法读取标识数据(MagicHeader)");
 		set_window_visible(true);
+		show_dialog(PROJ_VER, "程序损坏，无法读取标识数据(MagicHeader)");
 		return 1;
 	case 2:
-		show_dialog(PROJ_VER, "应用程序内没有任何打包数据");
 		set_window_visible(true);
+		show_dialog(PROJ_VER, "应用程序内没有任何打包数据");
 		return 1;
 	case 3:
-		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据");
 		set_window_visible(true);
+		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据");
 		return 1;
 	case 4:
-		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据(Jumpdata)");
 		set_window_visible(true);
+		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据(Jumpdata)");
 		return 1;
 	case 5:
-		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据(Metadata)");
 		set_window_visible(true);
+		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据(Metadata)");
 		return 1;
 	}
 

@@ -143,6 +143,7 @@ string get_string_md5(string str)
 
 string get_filename(string path)
 {
+    path = string_replace(path, "/", "\\");
     auto slash = path.rfind("\\");
     if (slash != std::string::npos)
         path = path.substr(slash + 1);
@@ -157,6 +158,7 @@ string get_filename(string path)
 
 std::string get_dir_name(std::string file)
 {
+    file = string_replace(file, "/", "\\");
     auto found = file.rfind("\\");
 
     if (found != std::string::npos)
