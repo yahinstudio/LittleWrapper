@@ -181,10 +181,15 @@ static pair<uint32_t, uint32_t> write_binaries(fstream& fout, string source_dir,
 
 void pack_binaries(string fileIn, string fileOut, string source_dir, string temp_compressed_dir, bool check_hash, string exec)
 {
+    // 创建文件夹
+    string parent_dir = get_dir_name(fileOut);
+    if (!file_exists(parent_dir))
+        error_check(!_mkdir(parent_dir.c_str()), "pack_binaries: could not create the parent dir of the output-file: " + parent_dir);
+
     std::fstream fin(fileIn, std::fstream::in | std::fstream::binary);
     std::fstream fout(fileOut, std::fstream::out | std::fstream::binary | std::fstream::trunc);
-    error_check(!fin.fail(), "attach_binaries: could not open the in-file: " + fileIn);
-    error_check(!fout.fail(), "attach_binaries: could not open the out-file: " + fileIn);
+    error_check(!fin.fail(), "pack_binaries: could not open the in-file: " + fileIn);
+    error_check(!fout.fail(), "pack_binaries: could not open the out-file: " + fileIn);
 
     // 获取magic位置
     auto magic_offset = get_magic_offset(fin, (uint8_t*)MAGIC_HEADER, MAGIC_LEN);
@@ -202,15 +207,15 @@ void pack_binaries(string fileIn, string fileOut, string source_dir, string temp
     int readBytes = 0;
     do {
         fin.read((char*)buf, buf_size);
-        error_check(!fin.bad(), "attach_binaries: could not copy the binary: read");
+        error_check(!fin.bad(), "pack_binaries: could not copy the binary: read");
         readBytes = fin.gcount();
         fout.write((char*)buf, readBytes);
-        error_check(!fout.bad(), "attach_binaries: could not copy the binary: write");
+        error_check(!fout.bad(), "pack_binaries: could not copy the binary: write");
     } while (readBytes > 0);
 
     // 准备临时目录用来存放压缩后的数据
     if (!file_exists(temp_compressed_dir))
-        error_check(!_mkdir(temp_compressed_dir.c_str()), "attach_binaries: could not create the temp dir: " + temp_compressed_dir);
+        error_check(!_mkdir(temp_compressed_dir.c_str()), "pack_binaries: could not create the temp dir: " + temp_compressed_dir);
     printf("tempdir: %s\n", temp_compressed_dir.c_str());
 
     // 写metadata
