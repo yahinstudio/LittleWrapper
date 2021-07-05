@@ -864,14 +864,11 @@
     <ClInclude Include="pcre2-10.37\pcre2.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="args_utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Project1.rc">
-      <Filter>资源文件</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Project1.aps" />
     <None Include="openssl-1.1.1k\fuzz\rand.inc">
       <Filter>头文件</Filter>
     </None>
@@ -959,6 +956,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="debug.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="args_utils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

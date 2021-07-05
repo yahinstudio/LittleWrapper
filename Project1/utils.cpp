@@ -261,7 +261,8 @@ void set_window_visible(bool visible)
 #if !defined(WINDOW_MODE)
     HWND hwnd = FindWindowA("ConsoleWindowClass", NULL);
     if (hwnd)
-        ShowWindowAsync(hwnd, visible ? SW_SHOW : SW_HIDE);
+        //if(IsWindowVisible(hwnd) != visible)
+            ShowWindowAsync(hwnd, visible ? SW_SHOW : SW_HIDE);
 #endif
 }
 

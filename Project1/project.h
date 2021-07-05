@@ -6,7 +6,8 @@
 #define ENABLED_ERROR_CHECK
 
 #define PROJECT_NAME "LittleWrapper"
-#define VERSION_TEXT "1.0.1"
+#define VERSION_TEXT "1.0.2"
+#define PROJ_VER PROJECT_NAME " v" VERSION_TEXT
 
 #define PATH_MAX 256
 
@@ -20,4 +21,8 @@
   2. 增加lasterror信息显示
   3. 增加绝对路径的支持
 
+1.0.2: 2021年7月5日:
+  1. 使用路径MD5命名临时文件，放置冲突
+  2. 重写参数处理相关代码
+  3. 使用command参数代替_start.txt文件
 */
