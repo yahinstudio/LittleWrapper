@@ -6,7 +6,7 @@
 #define ENABLED_ERROR_CHECK
 
 #define PROJECT_NAME "LittleWrapper"
-#define VERSION_TEXT "1.0.3"
+#define VERSION_TEXT "1.0.4"
 #define PROJ_VER PROJECT_NAME " v" VERSION_TEXT
 
 #define PATH_MAX 256
@@ -30,4 +30,7 @@
   1. 修正一些调试信息的文本错误
   2. 修复不能为输出文件自动创建父目录的问题
   3. 加大error_check()的缓冲区大小
+
+1.0.4: 2021年7月8日
+  1. 修复打包时--output参数不能直接填文件名的问题
 */
