@@ -260,12 +260,10 @@ void show_dialog(string title, string text)
 void set_window_visible(bool visible)
 {
     // 隐藏console窗口
-#if !defined(WINDOW_MODE)
     HWND hwnd = FindWindowA("ConsoleWindowClass", NULL);
     if (hwnd)
-        //if(IsWindowVisible(hwnd) != visible)
+        if(IsWindowVisible(hwnd) != visible)
             ShowWindowAsync(hwnd, visible ? SW_SHOW : SW_HIDE);
-#endif
 }
 
 bool is_relative_path(string path)

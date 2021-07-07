@@ -63,8 +63,9 @@ int functions(app_arguments args, string workdir, string executable)
         printf("<<< %s\n", args.pack_exec.c_str());
 
         printf("pack with source_dir: %s\n", source_dir.c_str());
-        string output_file = args.output != "" ? args.output : get_filename(source_dir) + ".exe";
+        string output_file = args.output != "" ? (is_relative_path(args.output)? workdir + "\\" : "") + args.output : workdir + "\\" + get_filename(source_dir) + ".exe";
         string temp_dir = "temp-compressed";
+        printf("output: %s\n", output_file.c_str());
 
         pack_binaries(executable, output_file, source_dir, temp_dir, !args.pack_no_hash, args.pack_exec);
 
@@ -75,7 +76,7 @@ int functions(app_arguments args, string workdir, string executable)
         printf("\nfinish\n");
     } else if (args.extract) {
         printf("extract\n");
-        string output_dir = args.output != "" ? args.output : workdir + "\\" + get_filename(executable);
+        string output_dir = args.output != "" ? (is_relative_path(args.output) ? workdir + "\\" : "") + args.output : workdir + "\\" + get_filename(executable);
 
         // 清理临时文件
         if (file_exists(output_dir))

@@ -189,7 +189,7 @@ void pack_binaries(string fileIn, string fileOut, string source_dir, string temp
     std::fstream fin(fileIn, std::fstream::in | std::fstream::binary);
     std::fstream fout(fileOut, std::fstream::out | std::fstream::binary | std::fstream::trunc);
     error_check(!fin.fail(), "pack_binaries: could not open the in-file: " + fileIn);
-    error_check(!fout.fail(), "pack_binaries: could not open the out-file: " + fileIn);
+    error_check(!fout.fail(), "pack_binaries: could not open the out-file: " + fileOut);
 
     // ªÒ»°magicŒª÷√
     auto magic_offset = get_magic_offset(fin, (uint8_t*)MAGIC_HEADER, MAGIC_LEN);
