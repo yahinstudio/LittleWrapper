@@ -25,12 +25,23 @@ void output_help()
     printf("         [--output <output_file>] [--no-hashing]  - pack files into a executable.\n");
     printf("  --extract [--output <output_dir>]               - extract the bundles inside this executable.\n");
     printf("  --detail                                        - detail the bundles inside this executable.\n");
+    printf("  --show_console                                  - run with console.\n");
+}
+
+int run_prog(string executable, bool always_show_console=false)
+{
+    string temp_dir = get_temp_directory() + "LW-" + get_string_md5(executable).substr(0, 8);
+
+    printf("execute\n");
+    return run_program(executable, temp_dir, always_show_console);
 }
 
 int functions(app_arguments args, string workdir, string executable)
 {
-    if (args.help)
+    if (args.always_show_console)
     {
+        run_prog(get_exe_path(), true);
+    } else if(args.help) {
         output_help();
     } else if (args.optarg_required) {
         printf("require option for arg: %s\n", args.invaild_opt_name.c_str());
@@ -119,17 +130,10 @@ int main(int argc, char** argv)
     if(argc > 999999999999999999)
         printf("preserveSection: %s\n\n", (char*)preserveSection + MAGIC_LEN);
 
-    string executable = get_exe_path();
-    string workdir = get_current_work_dir();
-
     if (argc == 1)
     {
-        string source = executable;
-        string temp_dir = get_temp_directory() + string("-") + get_string_md5(executable);
-
-        printf("execute\n");
-        return run_program(source, temp_dir);
+        return run_prog(get_exe_path());
     } else {
-        functions(parse_args(argc, argv), workdir, executable);
+        return functions(parse_args(argc, argv), get_current_work_dir(), get_exe_path());
     }
 }
