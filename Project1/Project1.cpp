@@ -20,10 +20,11 @@ uint8_t preserveSection[PRESERVE_LEN] = MAGIC_HEADER "{\"offset\":0, \"len\":0}"
 void output_help()
 {
     printf("Sub commands available:\n");
-    printf("  --help\n");
-    printf("  --pack <source_dir> --command <exec> [--output <output_file>] [--no-hashing]\n");
-    printf("  --extract [--output <output_dir>]\n");
-    printf("  --detail\n");
+    printf("  --help                                          - show this help infomation\n");
+    printf("  --pack <source_dir> --command <exec> \n");
+    printf("         [--output <output_file>] [--no-hashing]  - pack files into a executable.\n");
+    printf("  --extract [--output <output_dir>]               - extract the bundles inside this executable.\n");
+    printf("  --detail                                        - detail the bundles inside this executable.\n");
 }
 
 int functions(app_arguments args, string workdir, string executable)
