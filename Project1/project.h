@@ -6,7 +6,7 @@
 #define ENABLED_ERROR_CHECK
 
 #define PROJECT_NAME "LittleWrapper"
-#define VERSION_TEXT "1.0.4"
+#define VERSION_TEXT "1.0.5"
 #define PROJ_VER PROJECT_NAME " v" VERSION_TEXT
 
 #define PATH_MAX 256
@@ -33,4 +33,12 @@
 
 1.0.4: 2021年7月8日
   1. 修复打包时--output参数不能直接填文件名的问题
+  2. 增加持久显示console的选项
+
+1.0.5: 2021年7月15日
+  1. 修复文件校验判断错误的情况
+  2. 优化帮助文本的输出
+  3. 支持使用命令行设置窗口是否隐藏
+  4. 缩短临时目录的路径
+
 */
