@@ -16,11 +16,13 @@ app_arguments parse_args(int argc, char** argv)
         {"pack",            required_argument,   0,  'p'},
         {"extract",         no_argument,         0,  'e'},
         {"detail",          no_argument,         0,  'd'},
+
+        {"show_console",    no_argument,         0,  's'},
         {0, 0, 0, 0}
     };
 
     int ch;
-    while ((ch = getopt_long(argc, argv, ":hi:o:nc:p:e::d", longops, nullptr)) != -1)
+    while ((ch = getopt_long(argc, argv, ":hi:o:nc:p:eds", longops, nullptr)) != -1)
     {
         switch (ch)
         {
@@ -51,6 +53,9 @@ app_arguments parse_args(int argc, char** argv)
             break;
         case 'd': // detail
             result.detail = true;
+            break;
+        case 's': // show_console
+            result.always_show_console = true;
             break;
         case ':': // 缺失选项参数
             result.optarg_required = true;

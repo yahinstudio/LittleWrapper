@@ -108,30 +108,36 @@ static int start_child_process(string temp_dir, string exec)
 	return (int)exitcode;
 }
 
-int run_program(string file, string temp_dir)
+int run_program(string file, string temp_dir, bool always_show_console)
 {
-	set_window_visible(false);
+	if(!always_show_console)
+		set_window_visible(false);
 
 	string exec = "";
 	switch (extract_binaries(file, temp_dir, &exec))
 	{
 	case 1:
+		if (!always_show_console)
 		set_window_visible(true);
 		show_dialog(PROJ_VER, "程序损坏，无法读取标识数据(MagicHeader)");
 		return 1;
 	case 2:
+		if (!always_show_console)
 		set_window_visible(true);
 		show_dialog(PROJ_VER, "应用程序内没有任何打包数据");
 		return 1;
 	case 3:
+		if (!always_show_console)
 		set_window_visible(true);
 		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据");
 		return 1;
 	case 4:
+		if (!always_show_console)
 		set_window_visible(true);
 		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据(Jumpdata)");
 		return 1;
 	case 5:
+		if (!always_show_console)
 		set_window_visible(true);
 		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据(Metadata)");
 		return 1;
