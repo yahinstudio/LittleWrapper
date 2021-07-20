@@ -15,7 +15,7 @@ struct app_arguments
 
     // ½âÑ¹
     bool extract = false;
-    //std::string extract_dist = "";
+    std::string extract_dest = "";
 
     // ÏêÇé
     bool detail = false;

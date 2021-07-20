@@ -24,6 +24,8 @@ void output_help()
     printf("  --pack <source_dir> --command <exec> \n");
     printf("         [--output <output_file>] [--no-hashing]  - pack files into a executable.\n");
     printf("  --extract [--output <output_dir>]               - extract the bundles inside this executable.\n");
+    printf("  --extract=[output_dir]                          - extract the bundles inside this executable.\n");
+    printf("  -e[output_dir]                                  - extract the bundles inside this executable.\n");
     printf("  --detail                                        - detail the bundles inside this executable.\n");
     printf("  --show_console                                  - run with console.\n");
 }
@@ -88,7 +90,8 @@ int functions(app_arguments args, string workdir, string executable)
         printf("\nfinish\n");
     } else if (args.extract) {
         printf("extract\n");
-        string output_dir = args.output != "" ? (is_relative_path(args.output) ? workdir + "\\" : "") + args.output : workdir + "\\" + get_filename(executable);
+        string dest = args.output != "" ? args.output : args.extract_dest;
+        string output_dir = dest != "" ? (is_relative_path(dest) ? workdir + "\\" : "") + dest : workdir + "\\" + get_filename(executable);
 
         // 清理临时文件
         if (file_exists(output_dir))
