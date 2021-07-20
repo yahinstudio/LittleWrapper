@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// 生成文件夹结构
 vector<file_info_t> generate_dir_struct(std::string path)
 {
     vector<file_info_t> result;
@@ -44,6 +45,7 @@ vector<file_info_t> generate_dir_struct(std::string path)
     return result;
 }
 
+// 将文件夹结构转换成cJSON*格式
 cJSON* dir_struct_to_json_in_list(vector<file_info_t> file_struct)
 {
     cJSON* arr = cJSON_CreateArray();
