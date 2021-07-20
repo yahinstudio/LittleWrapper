@@ -11,6 +11,7 @@
 #include "archive.h"
 #include "magic.h"
 #include "md5/md5.h"
+#include "single_ins.h"
 
 constexpr int split_data_len = 8;
 constexpr uint8_t split_data[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -298,13 +299,12 @@ int extract_binaries(string fileIn, string extract_dir, string* exec)
     if (exec != nullptr)
         exec->assign(m_exec->valuestring);
 
-    // 建立根目录
-    string decompressed = extract_dir;
-    if (!file_exists(decompressed))
-        error_check(!_mkdir(decompressed.c_str()), "extract_binaries: could not create the extract-dir: " + decompressed);
+    // 单实例保护，当有多个实例存在时，后创建的实例不解压数据，直接运行就好，防止对先创建的运行中的实例造成文件破坏
+    string write_protect_key = string("lw-sil-") + get_string_md5(extract_dir);
+    printf("wtkey: %s\n", write_protect_key.c_str());
+    bool write_protect = !request_single_instance_lock(write_protect_key);
 
-    // 建立所有的文件夹(directories字段)
-    for (int i = 0; i < cJSON_GetArraySize(directories); i++)
+    if (!write_protect)
     {
         string dir = cJSON_GetArrayItem(directories, i)->valuestring;
         printf("mkdir: %s\n", dir.c_str());
@@ -362,10 +362,8 @@ int extract_binaries(string fileIn, string extract_dir, string* exec)
             //printf("reuse: %s   -   hash: I:%s, O:%s, %d: %d\n", raw_path.c_str(), get_file_md5(target_file).c_str(), raw_hash.c_str(), r, check_hash);
             continue;
         }
-
-        printf("decompress: %s, offset: 0x%llx, len: %lld\n", raw_path.c_str(), addr, length);
-        // 解压
-        inflate_to_file(fin, addr, length, target_file);
+    } else {
+        printf("muilt instance is detected.\n");
     }
 
     fin.close();
