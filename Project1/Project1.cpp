@@ -40,7 +40,7 @@ int functions(app_arguments args, string workdir, string executable)
 {
     if (args.always_show_console)
     {
-        run_prog(get_exe_path(), true);
+        return run_prog(get_exe_path(), true);
     } else if(args.help) {
         output_help();
     } else if (args.optarg_required) {
