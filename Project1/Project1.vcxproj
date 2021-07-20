@@ -417,6 +417,7 @@
     <ClInclude Include="project.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="runner.h" />
+    <ClInclude Include="single_ins.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="wingetopt-0.95\getopt.h" />
     <ClInclude Include="wrapper.h" />
@@ -447,6 +448,7 @@
     <ClCompile Include="md5\md5.cpp" />
     <ClCompile Include="Project1.cpp" />
     <ClCompile Include="runner.cpp" />
+    <ClCompile Include="single_ins.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="wingetopt-0.95\getopt.c" />
     <ClCompile Include="wrapper.cpp" />
