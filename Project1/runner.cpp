@@ -146,6 +146,9 @@ int run_program(string file, string temp_dir, bool always_show_console)
 	printf("temp dir: %s\n", temp_dir.c_str());
 
 	int rt = start_child_process(temp_dir, optdata.exec);
-	set_window_visible(true);
+
+	if (!always_show_console)
+		set_window_visible(true);
+
 	return rt;
 }
