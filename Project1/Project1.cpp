@@ -27,7 +27,7 @@ void output_help()
     printf("  --extract=[output_dir]                          - extract the bundles inside this executable.\n");
     printf("  -e[output_dir]                                  - extract the bundles inside this executable.\n");
     printf("  --detail                                        - detail the bundles inside this executable.\n");
-    printf("  --show_console                                  - run with console.\n");
+    printf("  --show_console                                  - run with console visible.\n");
 }
 
 int run_prog(string executable, bool always_show_console=false)
