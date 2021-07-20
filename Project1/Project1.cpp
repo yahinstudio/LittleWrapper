@@ -81,7 +81,10 @@ int functions(app_arguments args, string workdir, string executable)
         string temp_dir = "temp-compressed";
         printf("output: %s\n", output_file.c_str());
 
-        pack_binaries(executable, output_file, source_dir, temp_dir, !args.pack_no_hash, args.pack_exec);
+        optiondata arg;
+        arg.check_hash = !args.pack_no_hash;
+        arg.exec = args.pack_exec;
+        lw_pack(executable, output_file, source_dir, temp_dir, arg);
 
         // 清理临时文件
         if (file_exists(temp_dir))
@@ -97,7 +100,7 @@ int functions(app_arguments args, string workdir, string executable)
         if (file_exists(output_dir))
             remove_dir(output_dir);
 
-        switch (extract_binaries(executable, output_dir))
+        switch (lw_extract(executable, output_dir, false))
         {
         case 1:
             show_dialog(PROJ_VER, "程序损坏，无法读取标识数据(MagicHeader)");
@@ -118,7 +121,7 @@ int functions(app_arguments args, string workdir, string executable)
     } else if (args.detail) {
         printf("detail\n");
         string source = executable;
-        detail_binaries(source);
+        lw_detail(source);
     } else {
         printf("invaild options\n");
         output_help();

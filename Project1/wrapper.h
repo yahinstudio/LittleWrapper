@@ -3,8 +3,14 @@
 #include "iostream"
 #include "cJSON-1.7.14/cJSON.h"
 
-void pack_binaries(std::string fileIn, std::string fileOut, std::string source_dir, std::string temp_compressed_dir, bool check_hash, std::string exec);
+struct optiondata
+{
+	bool check_hash;
+	std::string exec;
+};
 
-int extract_binaries(std::string fileIn, std::string extract_dir, std::string* exec=nullptr);
+void lw_pack(std::string fileIn, std::string fileOut, std::string source_dir, std::string temp_compressed_dir, optiondata& optdata);
 
-void detail_binaries(std::string fileIn, std::string export_file="");
+int lw_extract(std::string fileIn, std::string extract_dir, bool single_ins_protection, optiondata* out_optdata=nullptr);
+
+void lw_detail(std::string fileIn, std::string export_file="");
