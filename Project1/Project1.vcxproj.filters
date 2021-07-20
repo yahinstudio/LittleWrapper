@@ -867,6 +867,9 @@
     <ClInclude Include="args_utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="single_ins.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="openssl-1.1.1k\fuzz\rand.inc">
@@ -959,6 +962,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="args_utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="single_ins.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
