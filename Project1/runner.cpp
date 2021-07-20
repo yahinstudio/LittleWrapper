@@ -113,8 +113,8 @@ int run_program(string file, string temp_dir, bool always_show_console)
 	if(!always_show_console)
 		set_window_visible(false);
 
-	string exec = "";
-	switch (extract_binaries(file, temp_dir, &exec))
+	optiondata optdata;
+	switch (lw_extract(file, temp_dir, true, &optdata))
 	{
 	case 1:
 		if (!always_show_console)
@@ -145,7 +145,7 @@ int run_program(string file, string temp_dir, bool always_show_console)
 
 	printf("temp dir: %s\n", temp_dir.c_str());
 
-	int rt = start_child_process(temp_dir, exec);
+	int rt = start_child_process(temp_dir, optdata.exec);
 	set_window_visible(true);
 	return rt;
 }
