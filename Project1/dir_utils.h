@@ -14,7 +14,7 @@ struct file_info_t
     uint64_t write;
 
     std::string name;
-    uint32_t length;
+    uint64_t length;
 
     std::vector<file_info_t> children;
 };

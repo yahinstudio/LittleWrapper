@@ -13,18 +13,18 @@ using namespace std;
 
 wchar_t* from_char_to_wchar(char* str)
 {
-    int len = MultiByteToWideChar(CP_UTF8, 0, str, strlen(str), 0, 0);
+    int len = MultiByteToWideChar(CP_UTF8, 0, str, (int)strlen(str), 0, 0);
     wchar_t* m_wchar = new wchar_t[len + 1];
-    MultiByteToWideChar(CP_UTF8, 0, str, strlen(str), m_wchar, len);
+    MultiByteToWideChar(CP_UTF8, 0, str, (int)strlen(str), m_wchar, len);
     m_wchar[len] = '\0';
     return m_wchar;
 }
 
 char* from_wchar_to_char(wchar_t* wchar)
 {
-    int len = WideCharToMultiByte(CP_ACP, 0, wchar, wcslen(wchar), NULL, 0, NULL, NULL);
+    int len = WideCharToMultiByte(CP_ACP, 0, wchar, (int)wcslen(wchar), NULL, 0, NULL, NULL);
     char* m_char = new char[len + 1];
-    WideCharToMultiByte(CP_ACP, 0, wchar, wcslen(wchar), m_char, len, NULL, NULL);
+    WideCharToMultiByte(CP_ACP, 0, wchar, (int)wcslen(wchar), m_char, len, NULL, NULL);
     m_char[len] = '\0';
     return m_char;
 }
@@ -82,8 +82,10 @@ string string_replace(string str, string oldstr, string newstr)
 
 long get_file_length(string file)
 {
+    file = string_replace(file, "/", "\\");
+
     _finddata_t find;
-    long handle = _findfirst(file.c_str(), &find);
+    intptr_t handle = _findfirst(file.c_str(), &find);
 
     //cout << "dinf: " << file << endl;
 
@@ -99,6 +101,8 @@ long get_file_length(string file)
 
 string get_file_md5(string file)
 {
+    file = string_replace(file, "/", "\\");
+
     if (!file_exists(file) || is_file_a_dir(file))
         return "";
 
@@ -108,7 +112,7 @@ string get_file_md5(string file)
     while (!ff.eof())
     {
         ff.read((char*)buf, 1024);
-        int len = ff.gcount();
+        streamsize len = ff.gcount();
         if (len > 0)
             md5.update((void*)buf, len);
     }
@@ -118,15 +122,15 @@ string get_file_md5(string file)
     return md5.toString();
 }
 
-string get_stream_md5(std::fstream& stream, uint64_t len)
+string get_stream_md5(std::fstream& stream, size_t len)
 {
     MD5 md5;
     uint8_t* buf = new uint8_t[1024];
     while (!stream.eof() && len > 0)
     {
-        int shouldRead = len >= 1024 ? 1024 : len;
+        size_t shouldRead = len >= 1024 ? 1024 : len;
         stream.read((char*)buf, shouldRead);
-        int readBytes = stream.gcount();
+        streamsize readBytes = stream.gcount();
         if (readBytes > 0)
             md5.update((void*)buf, readBytes);
         len -= readBytes;
@@ -144,6 +148,7 @@ string get_string_md5(string str)
 string get_filename(string path)
 {
     path = string_replace(path, "/", "\\");
+
     auto slash = path.rfind("\\");
     if (slash != std::string::npos)
         path = path.substr(slash + 1);
@@ -159,6 +164,7 @@ string get_filename(string path)
 std::string get_dir_name(std::string file)
 {
     file = string_replace(file, "/", "\\");
+
     auto found = file.rfind("\\");
 
     if (found != std::string::npos)
@@ -173,7 +179,7 @@ bool check_path(string path)
 
     for (int i = 0; i < 10; i++)
     {
-        uint32_t f1 = path.find("\\");
+        size_t f1 = path.find("\\");
         string sec = path.substr(0, f1);
 
         if (sec == "." || sec.find("..") == 0)
@@ -190,12 +196,16 @@ bool check_path(string path)
 
 bool file_exists(string path)
 {
+    path = string_replace(path, "/", "\\");
+
     return _access(path.c_str(), 0) == 0;
 }
 
 // 判断文件或文件夹是否存在
 bool file_exists2(string path)
 {
+    path = string_replace(path, "/", "\\");
+
     DWORD dwAttrib = GetFileAttributesA(path.c_str());
     return INVALID_FILE_ATTRIBUTES != dwAttrib;
 }
@@ -207,13 +217,16 @@ bool string_starts_with(string str, string starts_with)
 
 bool is_file_a_dir(string path)
 {
-    _finddata_t find;
-    long handle = _findfirst(path.c_str(), &find);
+    path = string_replace(path, "/", "\\");
 
-    if (handle != -1 && find.attrib & _A_SUBDIR)
+    _finddata_t find;
+    intptr_t handle = _findfirst(path.c_str(), &find);
+
+    if (handle != -1)
     {
+        bool is_dir = find.attrib & _A_SUBDIR;
         _findclose(handle);
-        return true;
+        return is_dir;
     }
 
     return false;
@@ -221,11 +234,13 @@ bool is_file_a_dir(string path)
 
 void remove_dir(string path)
 {
+    path = string_replace(path, "/", "\\");
+
     if (!file_exists(path))
         return;
 
     _finddata_t find;
-    long handle = _findfirst((path + "\\*.*").c_str(), &find);
+    intptr_t handle = _findfirst((path + "\\*.*").c_str(), &find);
 
     if (handle != -1)
     {
@@ -257,13 +272,22 @@ void show_dialog(string title, string text)
     int result = MessageBoxA(nullptr, text.c_str(), title.c_str(), MB_ICONERROR | MB_OK);
 }
 
+void winmain_dialog(string title, string content)
+{
+#if defined(ENTRANCE_WINMAIN)
+    show_dialog(title, content + "\n\n" PROJ_VER);
+#endif
+}
+
 void set_window_visible(bool visible)
 {
+#if !defined(ENTRANCE_WINMAIN)
     // 隐藏console窗口
     HWND hwnd = FindWindowA("ConsoleWindowClass", NULL);
     if (hwnd)
-        if(IsWindowVisible(hwnd) != visible)
+        if(!!IsWindowVisible(hwnd) != visible)
             ShowWindowAsync(hwnd, visible ? SW_SHOW : SW_HIDE);
+#endif
 }
 
 bool is_relative_path(string path)

@@ -15,7 +15,7 @@ vector<file_info_t> generate_dir_struct(std::string path)
     vector<file_info_t> result;
 
     _finddata_t find;
-    long handle = _findfirst((path + "\\*.*").c_str(), &find);
+    intptr_t handle = _findfirst((path + "\\*.*").c_str(), &find);
 
     if (handle != -1)
     {
@@ -63,7 +63,7 @@ cJSON* dir_struct_to_json_in_list(vector<file_info_t> file_struct)
         //cJSON_AddNumberToObject(obj, "write", it->write);
 
         cJSON_AddStringToObject(obj, "name", it->name.c_str());
-        cJSON_AddNumberToObject(obj, "length", it->length);
+        cJSON_AddNumberToObject(obj, "length", (double)it->length);
 
         cJSON* children = dir_struct_to_json_in_list(it->children);
         cJSON_AddItemToObject(obj, "children", children);

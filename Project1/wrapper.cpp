@@ -87,11 +87,11 @@ static vector<string> compress_dir(cJSON* file_array, std::string source_dir, st
 }
 
 // 生成jumpdata
-static string generate_jumpdata(uint64_t offset, uint64_t len)
+static string generate_jumpdata(size_t offset, size_t len)
 {
     cJSON* json = cJSON_CreateObject();
-    cJSON_AddNumberToObject(json, "offset", offset);
-    cJSON_AddNumberToObject(json, "len", len);
+    cJSON_AddNumberToObject(json, "offset", (double)offset);
+    cJSON_AddNumberToObject(json, "len", (double)len);
 
     char* printed = cJSON_PrintUnformatted(json);
     string result = printed;
@@ -104,17 +104,17 @@ static string generate_jumpdata(uint64_t offset, uint64_t len)
 
 // 打包数据
 // 返回pair<元数据的地址, 数据的长度>
-static pair<uint32_t, uint32_t> pack_binaries2(fstream& fout, string source_dir, string temp_compressed_dir, optiondata& optdata)
+static pair<size_t, size_t> pack_binaries2(fstream& fout, string source_dir, string temp_compressed_dir, optiondata& optdata)
 {
-    bool check_hash = optdata.check_hash;
-    string exec = optdata.exec;
-    auto metadata_addr = (uint32_t)fout.tellp();
+    auto metadata_addr = fout.tellp();
 
     cJSON* file_array = dir_struct_to_json_in_list(generate_dir_struct(source_dir)); // 文件目录结构数据
     cJSON* metadata = cJSON_CreateObject();
 
-    cJSON_AddBoolToObject(metadata, "check_hash", check_hash);
-    cJSON_AddStringToObject(metadata, "exec", exec.c_str());
+    cJSON_AddBoolToObject(metadata, "check_hash", optdata.check_hash);
+    cJSON_AddStringToObject(metadata, "exec", optdata.exec.c_str());
+    cJSON_AddBoolToObject(metadata, "show_console", optdata.show_console);
+
     cJSON_AddItemToObject(metadata, "directories", get_dir_paths(file_array));
     cJSON* address_table = cJSON_AddObjectToObject(metadata, "address_table");
 
@@ -122,7 +122,7 @@ static pair<uint32_t, uint32_t> pack_binaries2(fstream& fout, string source_dir,
     auto t = compress_dir(file_array, source_dir, temp_compressed_dir);
 
     // 生成地址表
-    uint32_t addr_offset = 0;
+    size_t addr_offset = 0;
     for (int i = 0; i < t.size(); i++)
     {
         auto filename = t[i];
@@ -137,10 +137,10 @@ static pair<uint32_t, uint32_t> pack_binaries2(fstream& fout, string source_dir,
 
         cJSON* record = cJSON_AddObjectToObject(address_table, hashed_filename.c_str());
         cJSON_AddStringToObject(record, "raw_path", filename.c_str());
-        cJSON_AddNumberToObject(record, "raw_size", raw_length);
+        cJSON_AddNumberToObject(record, "raw_size", (double)raw_length);
         cJSON_AddStringToObject(record, "raw_hash", raw_hash.c_str());
-        cJSON_AddNumberToObject(record, "offset", offset);
-        cJSON_AddNumberToObject(record, "len", len);
+        cJSON_AddNumberToObject(record, "offset", (double)offset);
+        cJSON_AddNumberToObject(record, "len", (double)len);
         cJSON_AddStringToObject(record, "hash", hash.c_str());
 
         addr_offset += len + split_block_len;
@@ -148,7 +148,7 @@ static pair<uint32_t, uint32_t> pack_binaries2(fstream& fout, string source_dir,
 
     // 1.写出整个metadata到文件
     char* metadata_text = cJSON_PrintUnformatted(metadata);
-    int metadata_len = strlen(metadata_text);
+    size_t metadata_len = strlen(metadata_text);
     fout.write(metadata_text, strlen(metadata_text));
     fout.write((char*)split_block, split_block_len);
     free(metadata_text);
@@ -167,7 +167,7 @@ static pair<uint32_t, uint32_t> pack_binaries2(fstream& fout, string source_dir,
         int buf_len = 16 * 1024;
         uint8_t* buf = new uint8_t[buf_len];
 
-        uint32_t readBytes = 0;
+        streampos readBytes = 0;
         do {
             fin.read((char*)buf, buf_len);
             error_check(!fin.bad(), "write_binaries: could not read the target-file: " + compressed_file);
@@ -183,6 +183,90 @@ static pair<uint32_t, uint32_t> pack_binaries2(fstream& fout, string source_dir,
     }
 
     return pair(metadata_addr, metadata_len);
+}
+
+// 从metadata里获取optiondata
+optiondata get_optiondata(cJSON* metadata)
+{
+    bool check_hash = cJSON_IsTrue(cJSON_GetObjectItem(metadata, "check_hash"));
+    string exec = cJSON_GetObjectItem(metadata, "exec")->valuestring;
+    bool show_console = cJSON_IsTrue(cJSON_GetObjectItem(metadata, "show_console"));
+
+    optiondata od;
+    od.exec = exec;
+    od.check_hash = check_hash;
+    od.show_console = show_console;
+
+    return od;
+}
+
+// 读取metadata
+// fileIn：从那个文件读取
+// out_addr：metadata在那个位置
+// out_len：metadata的长度
+// out_metadata：metadata输出
+void lw_read_metadata(string fileIn, cJSON** out_metadata, size_t* out_addr, size_t* out_len)
+{
+    fstream fin(fileIn, fstream::in | fstream::binary);
+    error_check(!fin.fail(), "could not open the file to extract: " + fileIn);
+
+    // 读取jumpdata
+    size_t jumpdata_offset = get_magic_offset(fin, (uint8_t*)MAGIC_HEADER, MAGIC_LEN) + MAGIC_LEN;
+
+    if (jumpdata_offset == 0)
+        throw jumpdata_not_found_exception();
+
+    fin.seekg(jumpdata_offset);
+    char* jumpdata = new char[PRESERVE_LEN - MAGIC_LEN];
+    fin.read((char*)jumpdata, PRESERVE_LEN - MAGIC_LEN);
+    error_check(!fin.bad(), "could not read the jumpdata: " + fileIn);
+
+    // 解析jumpdata
+    cJSON* json = cJSON_Parse(jumpdata);
+    if (json == nullptr)
+    {
+        delete[] jumpdata;
+        throw jumpdata_invaild_exception();
+    }
+    size_t metadata_addr = cJSON_GetObjectItem(json, "offset")->valueint;
+    size_t metadata_len = cJSON_GetObjectItem(json, "len")->valueint;
+    cJSON_Delete(json);
+    delete[] jumpdata;
+
+    if (metadata_addr == 0 || metadata_len == 0)
+        throw metadata_not_found_exception();
+
+    // 读取metadata
+    fin.clear();
+    fin.seekg(metadata_addr);
+
+    char* meta_buf = new char[metadata_len + 1];
+    //memset(meta_buf, 0, metadata_len2);
+    fin.read(meta_buf, metadata_len + 1);
+    error_check(!fin.bad(), "could not read the metadata: " + fileIn);
+
+    printf("metadata offset: 0x%llx, len: %lld\n", metadata_addr, metadata_len);
+
+    // 解析metadata
+    cJSON* meta_json = cJSON_Parse(meta_buf);
+    delete[] meta_buf;
+    if (meta_json == nullptr)
+        throw metadata_invaild_exception();;
+
+    // 传出数据
+    if (out_metadata != nullptr)
+        *out_metadata = meta_json;
+    else
+        cJSON_Delete(meta_json);
+
+    if (out_addr)
+        *out_addr = metadata_addr;
+
+    if(out_len)
+        *out_len = metadata_len;
+
+    // 释放资源
+    fin.close();
 }
 
 // 打包文件夹
@@ -211,7 +295,7 @@ void lw_pack(string fileIn, string fileOut, string source_dir, string temp_compr
     int buf_size = 4 * 1024;
     uint8_t* buf = new uint8_t[buf_size];
 
-    int readBytes = 0;
+    streamsize readBytes = 0;
     do {
         fin.read((char*)buf, buf_size);
         error_check(!fin.bad(), "pack_binaries: could not copy the binary: read");
@@ -228,8 +312,8 @@ void lw_pack(string fileIn, string fileOut, string source_dir, string temp_compr
     // 写metadata
     printf("generate directory strcuture for %s\n", source_dir.c_str());
     auto metadata_pair = pack_binaries2(fout, source_dir, temp_compressed_dir, optdata);
-    uint32_t metadata_addr = metadata_pair.first;
-    uint32_t metatada_len = metadata_pair.second;
+    size_t metadata_addr = metadata_pair.first;
+    size_t metatada_len = metadata_pair.second;
 
     // 写jumpdata
     uint64_t jumpdata_addr = magic_offset + MAGIC_LEN;
@@ -237,7 +321,7 @@ void lw_pack(string fileIn, string fileOut, string source_dir, string temp_compr
     fout.seekp(jumpdata_addr);
     fout.write(jumpdata.c_str(), jumpdata.length());
 
-    printf("wrote metadate at: %lx, magic at: %llx\n", metadata_addr, magic_offset);
+    printf("wrote metadate at: %llx, magic at: %llx\n", metadata_addr, magic_offset);
     printf("wrote jumpdata data: 0x%llx, or %lld\n", jumpdata_addr, jumpdata_addr);
 
     fin.close();
@@ -246,69 +330,18 @@ void lw_pack(string fileIn, string fileOut, string source_dir, string temp_compr
 }
 
 // 解压数据
-// 返回值： 1: 找不到jumpdata   2: 找不到metadata  3:数据损坏  4:无效jumpdata  5:无效metadata
-int lw_extract(string fileIn, string extract_dir, bool single_ins_protection, optiondata* out_optdata)
+void lw_extract(string fileIn, string extract_dir, bool single_ins_protection)
 {
-    fstream fin(fileIn, fstream::in | fstream::binary);
-    error_check(!fin.fail(), "extract_binaries: could not open the file to extract: " + fileIn);
-
-    // 读取jumpdata
-    uint64_t jumpdata_offset = get_magic_offset(fin, (uint8_t*)MAGIC_HEADER, MAGIC_LEN) + MAGIC_LEN;
-
-    if (jumpdata_offset == 0)
-    {
-        printf("Can not locate the magic-header in the executable file.\n");
-        return 1;
-    }
-
-    fin.seekg(jumpdata_offset);
-    char* jumpdata = new char[PRESERVE_LEN - MAGIC_LEN];
-    fin.read((char*)jumpdata, PRESERVE_LEN - MAGIC_LEN);
-    error_check(!fin.bad(), "extract_binaries: could not read the jumpdata: " + fileIn);
-
-    // 解析jumpdata
-    cJSON* json = cJSON_Parse(jumpdata);
-    if (json == nullptr)
-    {
-        return 4;
-        delete[] jumpdata;
-    }
-    uint64_t metadata_addr = cJSON_GetObjectItem(json, "offset")->valueint;
-    uint64_t metadata_len = cJSON_GetObjectItem(json, "len")->valueint;
-    cJSON_Delete(json);
-    delete[] jumpdata;
-
-    if (metadata_addr == 0 || metadata_len == 0)
-        return 2;
-
     // 读取metadata
-    fin.clear();
-    fin.seekg(metadata_addr);
+    size_t metadata_addr;
+    size_t metadata_len;
+    cJSON* meta;
 
-    char* meta_buf = new char[metadata_len + 1];
-    //memset(meta_buf, 0, metadata_len2);
-    fin.read(meta_buf, metadata_len + 1);
-    error_check(!fin.bad(), "extract_binaries: could not read the metadata: " + fileIn);
+    lw_read_metadata(fileIn, &meta, &metadata_addr, &metadata_len);
 
-    printf("metadata offset: 0x%llx, len: %lld\n", metadata_addr, metadata_len);
-
-    // 解析metadata
-    cJSON* meta_json = cJSON_Parse(meta_buf);
-    delete[] meta_buf;
-    if (meta_json == nullptr)
-        return 5;
-
-    bool check_hash = cJSON_IsTrue(cJSON_GetObjectItem(meta_json, "check_hash"));
-    string exec = cJSON_GetObjectItem(meta_json, "exec")->valuestring;
-    cJSON* directories = cJSON_GetObjectItem(meta_json, "directories");
-    cJSON* addr_table = cJSON_GetObjectItem(meta_json, "address_table");
-
-    // 传出数据
-    if (out_optdata != nullptr)
-    {
-        out_optdata->exec = exec;
-        out_optdata->check_hash = check_hash;
-    }
+    optiondata opt = get_optiondata(meta);
+    cJSON* directories = cJSON_GetObjectItem(meta, "directories");
+    cJSON* addr_table = cJSON_GetObjectItem(meta, "address_table");
 
     // 单实例保护，当有多个实例存在时，后创建的实例不解压数据，直接运行就好，防止对先创建的运行中的实例造成文件破坏
     string write_protect_key = string("lw-sil-") + get_string_md5(extract_dir);
@@ -317,6 +350,10 @@ int lw_extract(string fileIn, string extract_dir, bool single_ins_protection, op
 
     if (!write_protect)
     {
+        // 准备解压数据
+        fstream fin(fileIn, fstream::in | fstream::binary);
+        error_check(!fin.fail(), "extract_binaries: could not open the file to extract: " + fileIn);
+
         // 建立解压输出目录
         string decompressed = extract_dir;
         if (!file_exists(decompressed))
@@ -336,27 +373,27 @@ int lw_extract(string fileIn, string extract_dir, bool single_ins_protection, op
         // 解压所有打包好的文件
         fin.clear();
         fin.seekg(metadata_addr);
-        uint64_t base_addr = metadata_addr + metadata_len + split_block_len; // 末尾有8个是分隔符（都是0）
+        size_t base_addr = metadata_addr + metadata_len + split_block_len; // 末尾有8个是分隔符（都是0）
 
         printf("\nBaseOffset: 0x%llx\n", base_addr);
-        printf("CheckHash: %s\n", check_hash?"check":"no_check");
+        printf("CheckHash: %s\n", opt.check_hash?"check":"no_check");
 
         for (int i = 0; i < cJSON_GetArraySize(addr_table); i++)
         {
             cJSON* item = cJSON_GetArrayItem(addr_table, i);
             string key = item->string;
             string raw_path = cJSON_GetObjectItem(item, "raw_path")->valuestring;
-            uint64_t raw_size = cJSON_GetObjectItem(item, "raw_size")->valueint;
+            size_t raw_size = cJSON_GetObjectItem(item, "raw_size")->valueint;
             string raw_hash = cJSON_GetObjectItem(item, "raw_hash")->valuestring;
-            uint64_t offset = cJSON_GetObjectItem(item, "offset")->valueint;
-            uint64_t length = cJSON_GetObjectItem(item, "len")->valueint;
+            size_t offset = cJSON_GetObjectItem(item, "offset")->valueint;
+            size_t length = cJSON_GetObjectItem(item, "len")->valueint;
             string hash = cJSON_GetObjectItem(item, "hash")->valuestring;
 
             string target_file = decompressed + "\\" + string_replace(raw_path, "/", "\\");
-            uint64_t addr = base_addr + offset;
+            size_t addr = base_addr + offset;
 
             // 校验
-            if (check_hash)
+            if (opt.check_hash)
             {
                 fin.clear();
                 fin.seekg(addr);
@@ -366,19 +403,14 @@ int lw_extract(string fileIn, string extract_dir, bool single_ins_protection, op
                     printf("\nhash-check not passed, the file might be damaged!\nfile: %s\n", raw_path.c_str());
                     printf("hash-inside: %s\nhash-calculated: %s\n", hash.c_str(), md5.c_str());
                     printf("address: 0x%llx\nlength: %lld\n", addr, length);
-                    return 3;
+                    throw binaries_damaged_exception();
                 }
             }
 
             // 如果文件大小和校验一样，则跳过解压，重复使用
-            if (file_exists(target_file) && 
-                get_file_length(target_file) == raw_size && 
-                (!check_hash || get_file_md5(target_file) == raw_hash)
-                )
+            if (file_exists(target_file) && get_file_length(target_file) == raw_size && (!opt.check_hash || get_file_md5(target_file) == raw_hash))
             {
                 printf("reuse: %s\n", raw_path.c_str());
-                //int r = get_file_md5(target_file).compare(raw_hash);
-                //printf("reuse: %s   -   hash: I:%s, O:%s, %d: %d\n", raw_path.c_str(), get_file_md5(target_file).c_str(), raw_hash.c_str(), r, check_hash);
                 continue;
             }
 
@@ -386,109 +418,57 @@ int lw_extract(string fileIn, string extract_dir, bool single_ins_protection, op
             // 解压
             inflate_to_file(fin, addr, length, target_file);
         }
+
+        fin.close();
     } else {
         printf("muilt instance is detected.\n");
     }
 
     // 释放资源
-    fin.close();
-    cJSON_Delete(meta_json);
-    return 0;
+    cJSON_Delete(meta);
 }
 
 // 详细信息
 void lw_detail(string fileIn, string export_file)
 {
-    fstream fin(fileIn, fstream::in | fstream::binary);
-    error_check(!fin.fail(), "detail_binaries: could not open the file to detail: " + fileIn);
+    // 读取metadata
+    size_t metadata_addr;
+    size_t metadata_len;
+    cJSON* meta;
+    lw_read_metadata(fileIn, &meta, &metadata_addr, &metadata_len);
 
-    // 读取jumpdata
-    uint64_t jumpdata_offset = get_magic_offset(fin, (uint8_t*)MAGIC_HEADER, MAGIC_LEN) + MAGIC_LEN;
-
-    if (jumpdata_offset == 0)
-    {
-        printf("Can not locate the magic-header in the executable file.\n");
-        return;
-    }
-
-    fin.seekg(jumpdata_offset);
-    char* jumpdata = new char[PRESERVE_LEN - MAGIC_LEN];
-    fin.read((char*)jumpdata, PRESERVE_LEN - MAGIC_LEN);
-    error_check(!fin.bad(), "detail_binaries: could not read the jumpdata_offset: " + fileIn);
-
-    printf("jumpdata at: 0x%llx\n%s\n", jumpdata_offset, jumpdata);
-
-    // 解析jumpdata
-    cJSON* json = cJSON_Parse(jumpdata);
-    if (json == nullptr)
-    {
-        printf("the jumpdata is invaild\n");
-        delete[] jumpdata;
-        return;
-    }
-    uint64_t metadata_addr = cJSON_GetObjectItem(json, "offset")->valueint;
-    uint64_t metadata_len = cJSON_GetObjectItem(json, "len")->valueint;
-    cJSON_Delete(json);
-    delete[] jumpdata;
-
-    if (metadata_addr == 0 || metadata_len == 0)
-    {
-        printf("no detail could be shown.\nraw: off: %lld, len:%lld\n", metadata_addr, metadata_len);
-        return;
-    }
-
-    // 读取元数据
-    fin.clear();
-    fin.seekg(metadata_addr);
-
-    char* meta_buf = new char[metadata_len + 1];
-    //memset(meta_buf, 0, metadata_len2);
-    fin.read(meta_buf, metadata_len + 1);
-    error_check(!fin.bad(), "detail_binaries: could not read the metadata: " + fileIn);
-
-    printf("metadata offset: 0x%llx, len: %lld\n", metadata_addr, metadata_len);
-
-    // 解析元数据
-    cJSON* meta_json = cJSON_Parse(meta_buf);
-    if (meta_json == nullptr)
-    {
-        printf("the metadata is invaild\n");
-        delete[] meta_buf;
-        return;
-    }
-    char* pretty = cJSON_Print(meta_json);
+    // 打印metadata
+    char* pretty = cJSON_Print(meta);
 
     if (export_file == "")
     {
         // 输出基本信息
-        bool check_hash = cJSON_IsTrue(cJSON_GetObjectItem(meta_json, "check_hash"));
-        string exec = cJSON_GetObjectItem(meta_json, "exec")->valuestring;
-        printf("detail(check_hash: %s, exec: %s):\n----------\n%s\n----------\n", check_hash?"check":"no_check", exec.c_str(), pretty);
+        optiondata od = get_optiondata(meta);
+        printf("detail:\n  check_hash: %d\n  exec: %s\n  show_console: %d\n----------\n%s\n----------\n", od.check_hash, od.exec.c_str(), od.show_console, pretty);
 
         // 计算基本偏移地址
-        uint64_t base_addr = metadata_addr + metadata_len + split_block_len; // 末尾有8个是分隔符（都是0）
+        size_t base_addr = metadata_addr + metadata_len + split_block_len; // 末尾有8个是分隔符（都是0）
         printf("BaseAddr: 0x%llx\n", base_addr);
 
         // 输出所有目录
-        cJSON* directories = cJSON_GetObjectItem(meta_json, "directories");
+        cJSON* directories = cJSON_GetObjectItem(meta, "directories");
         for (int i = 0; i < cJSON_GetArraySize(directories); i++)
         {
             string path = cJSON_GetArrayItem(directories, i)->valuestring;
-
             printf("Directory: %s\n", path.c_str());
         }
 
         // 输出所有文件
-        cJSON* addr_table = cJSON_GetObjectItem(meta_json, "address_table");
+        cJSON* addr_table = cJSON_GetObjectItem(meta, "address_table");
         for (int i = 0; i < cJSON_GetArraySize(addr_table); i++)
         {
             cJSON* item = cJSON_GetArrayItem(addr_table, i);
             string key = item->string;
             string path = cJSON_GetObjectItem(item, "raw_path")->valuestring;
-            uint64_t offset = cJSON_GetObjectItem(item, "offset")->valueint;
-            uint64_t length = cJSON_GetObjectItem(item, "len")->valueint;
+            size_t offset = cJSON_GetObjectItem(item, "offset")->valueint;
+            size_t length = cJSON_GetObjectItem(item, "len")->valueint;
             string hash = cJSON_GetObjectItem(item, "hash")->valuestring;
-            uint64_t addr = base_addr + offset;
+            size_t addr = base_addr + offset;
 
             printf("File: %s, offset: 0x%llx, len: %lld, %s\n", path.c_str(), addr, length, hash.c_str());
         }
@@ -503,8 +483,6 @@ void lw_detail(string fileIn, string export_file)
         printf("detail wrote: %s\n", export_file.c_str());
     }
 
-    fin.close();
-    cJSON_Delete(meta_json);
+    cJSON_Delete(meta);
     delete[] pretty;
-    delete[] meta_buf;
 }

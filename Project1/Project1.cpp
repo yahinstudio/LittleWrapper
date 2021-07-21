@@ -9,46 +9,57 @@
 #include "runner.h"
 #include "project.h"
 #include "args_utils.h"
-
-// 程序读取自身而不是-attach.exe文件
-#define RELEASE_MODE
+#include "windows.h"
 
 using namespace std;
 
 uint8_t preserveSection[PRESERVE_LEN] = MAGIC_HEADER "{\"offset\":0, \"len\":0}";
 
-void output_help()
+void output_help(bool disabled_dialog_in_winmain=true)
 {
-    printf("Sub commands available:\n");
-    printf("  --help                                          - show this help infomation\n");
-    printf("  --pack <source_dir> --command <exec> \n");
-    printf("         [--output <output_file>] [--no-hashing]  - pack files into a executable.\n");
-    printf("  --extract [--output <output_dir>]               - extract the bundles inside this executable.\n");
-    printf("  --extract=[output_dir]                          - extract the bundles inside this executable.\n");
-    printf("  -e[output_dir]                                  - extract the bundles inside this executable.\n");
-    printf("  --detail                                        - detail the bundles inside this executable.\n");
-    printf("  --show_console                                  - run with console visible.\n");
+    string help_messge = "";
+    help_messge += "Sub commands available:\n";
+    help_messge += "  --help                                          - show this help infomation\n";
+    help_messge += "  --pack <source_dir> --command <exec> \n";
+    help_messge += "         [--output <output_file>] [--no-hashing]  - pack files into a executable.\n";
+    help_messge += "  --extract [--output <output_dir>]               - extract the bundles inside this executable.\n";
+    help_messge += "  --extract=[output_dir]                          - extract the bundles inside this executable.\n";
+    help_messge += "  -e[output_dir]                                  - extract the bundles inside this executable.\n";
+    help_messge += "  --detail                                        - detail the bundles inside this executable.\n";
+    help_messge += "  --show-console                                  - run with console visible(default value, higher priority).\n";
+    help_messge += "  --hide-console    or    -x                      - run with console invisible.\n";
+
+#if defined(ENTRANCE_WINMAIN)
+    if (!disabled_dialog_in_winmain)
+        winmain_dialog("参数不正确", help_messge);
+#endif
+
+    printf("%s", help_messge.c_str());
 }
 
-int run_prog(string executable, bool always_show_console=false)
+int run_prog(string executable, bool show_console_set, bool show_console=false)
 {
     string temp_dir = get_temp_directory() + "LW-" + get_string_md5(executable).substr(0, 8);
 
     printf("execute\n");
-    return run_program(executable, temp_dir, always_show_console);
+    return run_program(executable, temp_dir, show_console_set, show_console);
 }
 
 int functions(app_arguments args, string workdir, string executable)
 {
-    if (args.always_show_console)
+    if (args.show_console && args.argc == 2)
     {
-        return run_prog(get_exe_path(), true);
+        return run_prog(get_exe_path(), true, true);
+    } else if (args.hide_console && args.argc == 2) {
+        return run_prog(get_exe_path(), true, false);
     } else if(args.help) {
-        output_help();
+        output_help(false);
     } else if (args.optarg_required) {
+        winmain_dialog("参数不正确", string("选项\"") + args.invaild_opt_name + "\"需要参数");
         printf("require option for arg: %s\n", args.invaild_opt_name.c_str());
         output_help();
     } else if (args.unknown_opt) {
+        winmain_dialog("参数不正确", string("无效的参数: ") + args.invaild_opt_name);
         printf("invaild option: %s\n", args.invaild_opt_name.c_str());
         output_help();
     } else if (args.pack) {
@@ -63,6 +74,7 @@ int functions(app_arguments args, string workdir, string executable)
         // 文件检查
         if (!file_exists(source_dir) || !is_file_a_dir(source_dir))
         {
+            winmain_dialog("参数不正确", string("目录找不到或者不是个文件夹: ") + source_dir);
             printf("the source_dir could not be found or was not a directory: %s\n", source_dir.c_str());
             return 1;
         }
@@ -70,6 +82,7 @@ int functions(app_arguments args, string workdir, string executable)
         // 命令检查
         if (args.pack_exec == "") 
         {
+            winmain_dialog("参数不正确", "需要跟上 --exec 参数");
             printf("the option \"exec\" was required\n");
             return 1;
         }
@@ -84,12 +97,14 @@ int functions(app_arguments args, string workdir, string executable)
         optiondata arg;
         arg.check_hash = !args.pack_no_hash;
         arg.exec = args.pack_exec;
+        arg.show_console = args.show_console == args.hide_console ? true : args.show_console;
         lw_pack(executable, output_file, source_dir, temp_dir, arg);
 
         // 清理临时文件
         if (file_exists(temp_dir))
             remove_dir(temp_dir);
 
+        winmain_dialog("完成", string("打包完成: ") + output_file);
         printf("\nfinish\n");
     } else if (args.extract) {
         printf("extract\n");
@@ -100,34 +115,33 @@ int functions(app_arguments args, string workdir, string executable)
         if (file_exists(output_dir))
             remove_dir(output_dir);
 
-        switch (lw_extract(executable, output_dir, false))
-        {
-        case 1:
-            show_dialog(PROJ_VER, "程序损坏，无法读取标识数据(MagicHeader)");
-            return 1;
-        case 2:
-            show_dialog(PROJ_VER, "应用程序内没有任何打包数据");
-            return 1;
-        case 3:
-            show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据");
-            return 1;
-        case 4:
-            show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据(Jumpdata)");
-            return 1;
-        case 5:
-            show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据(Metadata)");
-            return 1;
-        }
+        lw_extract(executable, output_dir, false);
+        winmain_dialog("完成", string("解压完成: ") + output_dir);
     } else if (args.detail) {
         printf("detail\n");
         string source = executable;
         lw_detail(source);
     } else {
         printf("invaild options\n");
-        output_help();
+        output_help(false);
     }
 
     return 0;
+}
+
+// 窗口主函数
+int main(int argc, char** argv);
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow)
+{
+    // 转换参数
+    int argc = 0;
+    wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
+
+    char** argv = new char* [argc];
+    for (int i = 0; i < argc; i++)
+        argv[i] = from_wchar_to_char(wargv[i]);
+
+    return main(argc, argv);
 }
 
 int main(int argc, char** argv)
@@ -135,11 +149,31 @@ int main(int argc, char** argv)
     printf("%s\n\n", PROJ_VER);
     if(argc > 999999999999999999)
         printf("preserveSection: %s\n\n", (char*)preserveSection + MAGIC_LEN);
-
-    if (argc == 1)
-    {
-        return run_prog(get_exe_path());
-    } else {
-        return functions(parse_args(argc, argv), get_current_work_dir(), get_exe_path());
+    try {
+        if (argc == 1)
+            return run_prog(get_exe_path(), false);
+        else 
+            return functions(parse_args(argc, argv), get_current_work_dir(), get_exe_path());
+    } catch (jumpdata_not_found_exception& e) {
+        winmain_dialog("程序损坏", "无法读取标识数据(MagicHeader)");
+        printf("The MagicHeader could not be read.\n");
+    } catch (jumpdata_invaild_exception& e) {
+        winmain_dialog("程序损坏", "无法读取标识数据(Jumpdata)");
+        printf("The Jumpdata could not be read.\n");
+    } catch (metadata_not_found_exception& e) {
+        winmain_dialog("无法运行", "应用程序内没有任何打包数据");
+        printf("The executable did not contain any bundles.\n");
+    } catch (metadata_invaild_exception& e) {
+        winmain_dialog("程序损坏", "无法读取标识数据(Metadata)");
+        printf("The Metadata could not be read.\n");
+    } catch (binaries_damaged_exception& e) {
+        winmain_dialog("程序损坏", "无法读取对应的数据");
+        printf("The bundles inside the executable have been damaged.\n");
+    } catch (exception& e) {
+        winmain_dialog("无法运行", string("未知错误") + e.what());
+        printf("未知错误: %s.\n", e.what());
+    } catch (...) {
+        winmain_dialog("无法运行", "未知错误");
+        printf("未知错误.\n");
     }
 }

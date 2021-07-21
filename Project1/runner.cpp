@@ -108,46 +108,25 @@ static int start_child_process(string temp_dir, string exec)
 	return (int)exitcode;
 }
 
-int run_program(string file, string temp_dir, bool always_show_console)
+int run_program(string file, string temp_dir, bool show_console_set, bool show_console)
 {
-	if(!always_show_console)
+	// 获取optiondata
+	cJSON* meta;
+	lw_read_metadata(file, &meta);
+	optiondata optdata = get_optiondata(meta);
+
+	bool console_visible = show_console_set ? show_console : optdata.show_console;
+
+	// 解压数据
+	lw_extract(file, temp_dir, true);
+
+	if(!console_visible)
 		set_window_visible(false);
 
-	optiondata optdata;
-	switch (lw_extract(file, temp_dir, true, &optdata))
-	{
-	case 1:
-		if (!always_show_console)
-		set_window_visible(true);
-		show_dialog(PROJ_VER, "程序损坏，无法读取标识数据(MagicHeader)");
-		return 1;
-	case 2:
-		if (!always_show_console)
-		set_window_visible(true);
-		show_dialog(PROJ_VER, "应用程序内没有任何打包数据");
-		return 1;
-	case 3:
-		if (!always_show_console)
-		set_window_visible(true);
-		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据");
-		return 1;
-	case 4:
-		if (!always_show_console)
-		set_window_visible(true);
-		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据(Jumpdata)");
-		return 1;
-	case 5:
-		if (!always_show_console)
-		set_window_visible(true);
-		show_dialog(PROJ_VER, "程序损坏，无法读取对应的数据(Metadata)");
-		return 1;
-	}
-
 	printf("temp dir: %s\n", temp_dir.c_str());
-
 	int rt = start_child_process(temp_dir, optdata.exec);
 
-	if (!always_show_console)
+	if (!console_visible)
 		set_window_visible(true);
 
 	return rt;
