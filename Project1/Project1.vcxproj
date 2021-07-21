@@ -537,6 +537,7 @@
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="wingetopt-0.95\getopt.c" />
     <ClCompile Include="wrapper.cpp" />
+    <ClCompile Include="wrapper.func.cpp" />
     <ClCompile Include="zlib-1.2.11\adler32.c" />
     <ClCompile Include="zlib-1.2.11\compress.c" />
     <ClCompile Include="zlib-1.2.11\crc32.c" />

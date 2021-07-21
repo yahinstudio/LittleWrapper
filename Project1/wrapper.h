@@ -2,14 +2,8 @@
 #include "iostream"
 #include "cJSON-1.7.14/cJSON.h"
 
-//enum lw_error {
-//	no_error,
-//	jumpdata_not_found,
-//	jumpdata_invaild,
-//	metadata_not_found,
-//	metadata_invaild,
-//	binaries_damaged
-//};
+constexpr int split_block_len = 8;
+constexpr uint8_t split_block[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 class lw_base_exception : public std::exception
 {
