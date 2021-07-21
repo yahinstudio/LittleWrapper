@@ -4,7 +4,7 @@
 #define ENABLED_ERROR_CHECK
 
 #define PROJECT_NAME "LittleWrapper"
-#define VERSION_TEXT "1.0.7"
+#define VERSION_TEXT "1.0.8"
 #define PROJ_VER PROJECT_NAME " v" VERSION_TEXT
 
 #define PATH_MAX 256
