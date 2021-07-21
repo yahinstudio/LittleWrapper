@@ -117,11 +117,16 @@ int run_program(string file, string temp_dir, bool show_console_set, bool show_c
 
 	bool console_visible = show_console_set ? show_console : optdata.show_console;
 
+	if(show_console_set)
+		if (!console_visible)
+			set_window_visible(false);
+
 	// ½âÑ¹Êý¾Ý
 	lw_extract(file, temp_dir, true);
 
-	if(!console_visible)
-		set_window_visible(false);
+	if (!show_console_set)
+		if(!console_visible)
+			set_window_visible(false);
 
 	printf("temp dir: %s\n", temp_dir.c_str());
 	int rt = start_child_process(temp_dir, optdata.exec);
