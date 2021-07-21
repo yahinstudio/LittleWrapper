@@ -16,7 +16,7 @@ long get_file_length(std::string file);
 
 std::string get_file_md5(std::string file);
 
-std::string get_stream_md5(std::fstream& stream, uint64_t len);
+std::string get_stream_md5(std::fstream& stream, size_t len);
 
 std::string get_string_md5(std::string str);
 
@@ -37,6 +37,8 @@ bool is_file_a_dir(std::string path);
 void remove_dir(std::string path);
 
 void show_dialog(std::string title, std::string text);
+
+void winmain_dialog(std::string title, std::string content);
 
 void set_window_visible(bool visible);
 

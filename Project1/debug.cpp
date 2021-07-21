@@ -22,7 +22,7 @@ string get_last_error_message()
 	string result;
 
 	char* msg_buf;
-	uint64_t err_code = GetLastError();
+	DWORD err_code = GetLastError();
 
 	FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
 		0,

@@ -25,11 +25,17 @@ struct app_arguments
     bool unknown_opt = false;
     std::string invaild_opt_name = "";
 
-    // 运行过程中不隐藏窗口
-    bool always_show_console = false;
+    // 运行过程中显示窗口
+    bool show_console = false;
+    // 运行过程中隐藏窗口
+    bool hide_console = false;
 
     // 帮助
     bool help = false;
+
+    // 原始参数信息
+    int argc;
+    char** argv;
 };
 
 app_arguments parse_args(int argc, char** argv);

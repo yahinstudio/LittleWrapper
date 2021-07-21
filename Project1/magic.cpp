@@ -4,9 +4,9 @@
 
 using namespace std;
 
-uint64_t get_magic_offset(fstream& fs, uint8_t* magic, int magic_len)
+size_t get_magic_offset(fstream& fs, uint8_t* magic, int magic_len)
 {
-    uint64_t result = 0;
+    size_t result = 0;
 
     fs.clear();
     fs.seekg(0, fs.beg);
@@ -22,17 +22,17 @@ uint64_t get_magic_offset(fstream& fs, uint8_t* magic, int magic_len)
     char* buf = new char[buf_len];
 
     int continueToMatch = 0;
-    uint64_t totalRead = 0;
+    size_t totalRead = 0;
     while (true)
     {
         fs.read(buf, buf_len);
-        auto readBytes = fs.gcount();
+        auto readBytes = (size_t)fs.gcount();
         totalRead += readBytes;
 
-        for (uint64_t i = 0; i < readBytes; i++)
+        for (size_t i = 0; i < readBytes; i++)
         {
-            uint64_t matchPos = 0;
-            uint64_t matchCount = 0;
+            size_t matchPos = 0;
+            size_t matchCount = 0;
 
             for (int j = 0; j < magic_len - continueToMatch; j++)
             {

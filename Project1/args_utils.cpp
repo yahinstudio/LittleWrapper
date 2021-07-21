@@ -5,6 +5,9 @@ app_arguments parse_args(int argc, char** argv)
 {
     app_arguments result;
 
+    result.argc = argc;
+    result.argv = argv;
+
     option longops[] = {
         {"help",            no_argument,         0,  'h'},
 
@@ -17,12 +20,13 @@ app_arguments parse_args(int argc, char** argv)
         {"extract",         optional_argument,   0,  'e'},
         {"detail",          no_argument,         0,  'd'},
 
-        {"show_console",    no_argument,         0,  's'},
+        {"show-console",    no_argument,         0,  's'},
+        {"hide-console",    no_argument,         0,  'x'},
         {0, 0, 0, 0}
     };
 
     int ch;
-    while ((ch = getopt_long(argc, argv, ":hi:o:nc:p:e::ds", longops, nullptr)) != -1)
+    while ((ch = getopt_long(argc, argv, ":hi:o:nc:p:e::dsx", longops, nullptr)) != -1)
     {
         switch (ch)
         {
@@ -54,8 +58,11 @@ app_arguments parse_args(int argc, char** argv)
         case 'd': // detail
             result.detail = true;
             break;
-        case 's': // show_console
-            result.always_show_console = true;
+        case 's': // show-console
+            result.show_console = true;
+            break;
+        case 'x': // hide-console
+            result.hide_console = true;
             break;
         case ':': // 缺失选项参数
             result.optarg_required = true;
