@@ -967,5 +967,8 @@
     <ClCompile Include="single_ins.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="wrapper.func.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
