@@ -1,10 +1,10 @@
 #pragma once
 
-// ÆôÓÃ´íÎó¼ì²é£¨·¢Éú´íÎóÊ±»áÏÔÊ¾µ¯¿ò£©
+// å¯ç”¨é”™è¯¯æ£€æŸ¥ï¼ˆå‘ç”Ÿé”™è¯¯æ—¶ä¼šæ˜¾ç¤ºå¼¹æ¡†ï¼‰
 #define ENABLED_ERROR_CHECK
 
 #define PROJECT_NAME "LittleWrapper"
-#define VERSION_TEXT "1.0.7"
+#define VERSION_TEXT "1.0.8"
 #define PROJ_VER PROJECT_NAME " v" VERSION_TEXT
 
 #define PATH_MAX 256
