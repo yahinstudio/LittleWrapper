@@ -501,6 +501,7 @@
     <ClInclude Include="pcre2-10.37\sljit\sljitLir.h" />
     <ClInclude Include="project.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="runner.h" />
     <ClInclude Include="single_ins.h" />
     <ClInclude Include="utils.h" />
@@ -553,6 +554,12 @@
     <ClCompile Include="zlib-1.2.11\trees.c" />
     <ClCompile Include="zlib-1.2.11\uncompr.c" />
     <ClCompile Include="zlib-1.2.11\zutil.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Project1.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
