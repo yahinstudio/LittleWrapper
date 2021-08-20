@@ -22,11 +22,12 @@ app_arguments parse_args(int argc, char** argv)
 
         {"show-console",    no_argument,         0,  's'},
         {"hide-console",    no_argument,         0,  'x'},
+        {"suppress-output", no_argument,         0,  'u'},
         {0, 0, 0, 0}
     };
 
     int ch;
-    while ((ch = getopt_long(argc, argv, ":hi:o:nc:p:e::dsx", longops, nullptr)) != -1)
+    while ((ch = getopt_long(argc, argv, ":hi:o:nc:p:e::dsxu", longops, nullptr)) != -1)
     {
         switch (ch)
         {
@@ -63,6 +64,9 @@ app_arguments parse_args(int argc, char** argv)
             break;
         case 'x': // hide-console
             result.hide_console = true;
+            break;
+        case 'u': // suppress-output
+            result.suppress_output = true;
             break;
         case ':': // 缺失选项参数
             result.optarg_required = true;

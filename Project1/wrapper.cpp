@@ -162,7 +162,7 @@ void lw_pack(string fileIn, string fileOut, string source_dir, string temp_compr
 }
 
 // 解压数据
-void lw_extract(string fileIn, string extract_dir, bool single_ins_protection)
+void lw_extract(string fileIn, string extract_dir, bool single_ins_protection, bool no_output)
 {
     // 读取metadata
     size_t metadata_addr;
@@ -195,7 +195,8 @@ void lw_extract(string fileIn, string extract_dir, bool single_ins_protection)
         for (int i = 0; i < cJSON_GetArraySize(directories); i++)
         {
             string dir = cJSON_GetArrayItem(directories, i)->valuestring;
-            printf("mkdir: %s\n", dir.c_str());
+            if(!no_output)
+                printf("mkdir: %s\n", dir.c_str());
 
             string cdir = decompressed + "\\" + string_replace(dir, "/", "\\");
             if (!file_exists(cdir))
@@ -242,11 +243,13 @@ void lw_extract(string fileIn, string extract_dir, bool single_ins_protection)
             // 如果文件大小和校验一样，则跳过解压，重复使用
             if (file_exists(target_file) && get_file_length(target_file) == raw_size && (!opt.check_hash || get_file_md5(target_file) == raw_hash))
             {
-                printf("reuse: %s\n", raw_path.c_str());
+                if (!no_output)
+                    printf("reuse: %s\n", raw_path.c_str());
                 continue;
             }
 
-            printf("decompress: %s, offset: 0x%llx, len: %lld\n", raw_path.c_str(), addr, length);
+            if (!no_output)
+                printf("decompress: %s, offset: 0x%llx, len: %lld\n", raw_path.c_str(), addr, length);
             // 解压
             inflate_to_file(fin, addr, length, target_file);
         }
