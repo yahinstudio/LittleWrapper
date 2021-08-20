@@ -40,6 +40,6 @@ void lw_read_metadata(std::string fileIn, cJSON** out_metadata, size_t* out_addr
 
 void lw_pack(std::string fileIn, std::string fileOut, std::string source_dir, std::string temp_compressed_dir, optiondata& optdata);
 
-void lw_extract(std::string fileIn, std::string extract_dir, bool single_ins_protection);
+void lw_extract(std::string fileIn, std::string extract_dir, bool single_ins_protection, bool no_output);
 
 void lw_detail(std::string fileIn, std::string export_file = "");
