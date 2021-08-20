@@ -54,7 +54,7 @@ static void execute_shell(string temp_dir, string exec)
 }
 */
 
-static int start_child_process(string temp_dir, string exec)
+static int start_child_process(string temp_dir, string exec, bool no_output)
 {
 	STARTUPINFOA si;
 	PROCESS_INFORMATION pi;
@@ -108,7 +108,7 @@ static int start_child_process(string temp_dir, string exec)
 	return (int)exitcode;
 }
 
-int run_program(string file, string temp_dir, bool show_console_set, bool show_console)
+int run_program(string file, string temp_dir, bool show_console_set, bool show_console, bool no_output)
 {
 	// 获取optiondata
 	cJSON* meta;
@@ -121,13 +121,13 @@ int run_program(string file, string temp_dir, bool show_console_set, bool show_c
 		set_window_visible(false);
 
 	// 解压数据
-	lw_extract(file, temp_dir, true);
+	lw_extract(file, temp_dir, true, no_output);
 
 	if(!console_visible)
 		set_window_visible(false);
 
 	printf("temp dir: %s\n", temp_dir.c_str());
-	int rt = start_child_process(temp_dir, optdata.exec);
+	int rt = start_child_process(temp_dir, optdata.exec, no_output);
 
 	if (!console_visible)
 		set_window_visible(true);

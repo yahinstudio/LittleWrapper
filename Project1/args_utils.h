@@ -30,6 +30,9 @@ struct app_arguments
     // 运行过程中隐藏窗口
     bool hide_console = false;
 
+    // 抑制子进程输出
+    bool suppress_output = false;
+
     // 帮助
     bool help = false;
 

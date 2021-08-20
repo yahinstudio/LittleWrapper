@@ -27,7 +27,8 @@ void output_help(bool disabled_dialog_in_winmain=true)
     help_messge += "  -e[output_dir]                                  - extract the bundles inside this executable.\n";
     help_messge += "  --detail                                        - detail the bundles inside this executable.\n";
     help_messge += "  --show-console                                  - run with console visible(default value, higher priority).\n";
-    help_messge += "  --hide-console    or    -x                      - run with console invisible.\n";
+    help_messge += "  --hide-console  or  -x                          - run with console invisible.\n";
+    help_messge += "  --suppress-output  or  -u                       - suppress the output of decompresing.\n";
 
 #if defined(ENTRANCE_WINMAIN)
     if (!disabled_dialog_in_winmain)
@@ -37,22 +38,20 @@ void output_help(bool disabled_dialog_in_winmain=true)
     printf("%s", help_messge.c_str());
 }
 
-int run_prog(string executable, bool show_console_set, bool show_console=false)
+int run_prog(string executable, bool show_console_set, bool show_console, bool no_output)
 {
     string temp_dir = get_temp_directory() + "LW-" + get_string_md5(executable).substr(0, 8);
 
     printf("execute\n");
-    return run_program(executable, temp_dir, show_console_set, show_console);
+    return run_program(executable, temp_dir, show_console_set, show_console, no_output);
 }
 
 int functions(app_arguments args, string workdir, string executable)
 {
-    if (args.show_console && args.argc == 2)
-    {
-        return run_prog(get_exe_path(), true, true);
-    } else if (args.hide_console && args.argc == 2) {
-        return run_prog(get_exe_path(), true, false);
-    } else if(args.help) {
+    printf("suppress-output: %d\n", args.suppress_output);
+    printf("show-console: %d\n", args.show_console);
+
+    if(args.help) {
         output_help(false);
     } else if (args.optarg_required) {
         winmain_dialog("参数不正确", string("选项\"") + args.invaild_opt_name + "\"需要参数");
@@ -115,15 +114,14 @@ int functions(app_arguments args, string workdir, string executable)
         if (file_exists(output_dir))
             remove_dir(output_dir);
 
-        lw_extract(executable, output_dir, false);
+        lw_extract(executable, output_dir, false, false);
         winmain_dialog("完成", string("解压完成: ") + output_dir);
     } else if (args.detail) {
         printf("detail\n");
         string source = executable;
         lw_detail(source);
     } else {
-        printf("invaild options\n");
-        output_help(false);
+        return run_prog(get_exe_path(), args.show_console != args.hide_console, args.show_console, args.suppress_output);
     }
 
     return 0;
@@ -149,11 +147,9 @@ int main(int argc, char** argv)
     printf("%s\n\n", PROJ_VER);
     if(argc > 999999999999999999)
         printf("preserveSection: %s\n\n", (char*)preserveSection + MAGIC_LEN);
+    
     try {
-        if (argc == 1)
-            return run_prog(get_exe_path(), false);
-        else 
-            return functions(parse_args(argc, argv), get_current_work_dir(), get_exe_path());
+        return functions(parse_args(argc, argv), get_current_work_dir(), get_exe_path());
     } catch (jumpdata_not_found_exception& e) {
         winmain_dialog("程序损坏", "无法读取标识数据(MagicHeader)");
         printf("The MagicHeader could not be read.\n");
@@ -176,4 +172,6 @@ int main(int argc, char** argv)
         winmain_dialog("无法运行", "未知错误");
         printf("未知错误.\n");
     }
+
+    printf("finish");
 }
