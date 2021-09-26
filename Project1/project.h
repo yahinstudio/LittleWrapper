@@ -1,6 +1,6 @@
 #pragma once
 
-// å¯ç”¨é”™è¯¯æ£€æŸ¥ï¼ˆå‘ç”Ÿé”™è¯¯æ—¶ä¼šæ˜¾ç¤ºå¼¹æ¡†ï¼‰
+// ÆôÓÃ´íÎó¼ì²é£¨·¢Éú´íÎóÊ±»áÏÔÊ¾µ¯¿ò£©
 #define ENABLED_ERROR_CHECK
 
 #define PROJECT_NAME "LittleWrapper"
