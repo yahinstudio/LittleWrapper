@@ -20,7 +20,7 @@ void output_help(bool disabled_dialog_in_winmain=true)
     string help_messge = "";
     help_messge += "Sub commands available:\n";
     help_messge += "  --help                                          - show this help infomation\n";
-    help_messge += "  --pack <source_dir> --command <exec> \n";
+    help_messge += "  --pack <source_dir> --exec <command> \n";
     help_messge += "         [--output <output_file>] [--no-hashing]  - pack files into a executable.\n";
     help_messge += "  --extract [--output <output_dir>]               - extract the bundles inside this executable.\n";
     help_messge += "  --extract=[output_dir]                          - extract the bundles inside this executable.\n";
