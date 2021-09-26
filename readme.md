@@ -22,7 +22,7 @@ LittleWrapper是一个适用于Windows平台的可执行文件打包程序，用
 # exec：启动命令行（通常是启动文件夹里主程序）
 # output_file：打包后的输出文件名
 # no-hashing：以禁用二次启动时的文件校验过程，来换取启动速度（首次启动不受影响）
---pack <source_dir> --command <exec> [--output <output_file>] [--no-hashing]
+--pack <source_dir> --exec <command> [--output <output_file>] [--no-hashing]
 
 # 解压已经打包好的文件（只是解压出来，不会执行）
 # output_dir：解压后存放的位置，默认为文件旁边
