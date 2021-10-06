@@ -6,6 +6,7 @@
 #include "debug.h"
 #include "env.h"
 #include "windows.h"
+#include "vector"
 
 using namespace std;
 
@@ -54,7 +55,7 @@ static void execute_shell(string temp_dir, string exec)
 }
 */
 
-static int start_child_process(string temp_dir, string exec, bool no_output)
+static int start_child_process(string temp_dir, string exec, char* env, bool no_output)
 {
 	STARTUPINFOA si;
 	PROCESS_INFORMATION pi;
@@ -66,29 +67,26 @@ static int start_child_process(string temp_dir, string exec, bool no_output)
 
 	printf("exec: %s\nwork dir: %s\n", exec.c_str(), workdir.c_str());
 
-	string envString = string("_LW_EXE=") + string_replace(get_exe_path(), "\\", "/") + "\0";
-	void* envStrPtr = (void*)envString.c_str();
-
 	changed_current_work_dir(temp_dir);
 
 	// Start the child process. 
 	bool success = CreateProcessA(nullptr,      // No module name (use command line)
 		(LPSTR)exec.c_str(),                    // Command line
-		NULL,              // Process handle not inheritable
-		NULL,              // Thread handle not inheritable
-		FALSE,             // Set handle inheritance to FALSE
-		0,                 // No creation flags
-		envStrPtr,         // Use parent's environment block
-		workdir.c_str(),   // Use parent's work directory 
-		&si,               // Pointer to STARTUPINFO structure
-		&pi                // Pointer to PROCESS_INFORMATION structure
+		NULL,                 // Process handle not inheritable
+		NULL,                 // Thread handle not inheritable
+		FALSE,                // Set handle inheritance to FALSE
+		0,                    // No creation flagsd
+		(LPVOID)env,          // Use parent's environment block
+		workdir.c_str(),      // Use parent's work directory 
+		&si,                  // Pointer to STARTUPINFO structure
+		&pi                   // Pointer to PROCESS_INFORMATION structure
 	);
 
 	if (!success)
 	{
 		string last_error = get_last_error_message();
 		printf("CreateProcess failed: %s(%d).\n", last_error.c_str(), GetLastError());
-		show_dialog("主程序执行失败", "exec: " + exec + "\nwork dir: " + workdir + "\nerr: " + last_error);
+		show_dialog("主程序执行失败", "exec: " + exec + "\nwork dir: " + workdir + "\nenv: " + env + "\nerr: " + last_error);
 		return 1;
 	}
 
@@ -109,6 +107,36 @@ static int start_child_process(string temp_dir, string exec, bool no_output)
 
 	printf("child process exited with exitcode %ld.\n", exitcode);
 	return (int)exitcode;
+}
+
+static char* getEnvironment(string temp_dir)
+{
+	std::vector<string> ps;
+	ps.push_back(string("_LW_EXEFILE=") + string_replace(get_exe_path(), "\\", "/"));
+	ps.push_back(string("_LW_EXEDIR=") + string_replace(get_dir_name(get_exe_path()), "\\", "/"));
+	ps.push_back(string("_LW_TEMPDIR=") + string_replace(temp_dir, "\\", "/"));
+	ps.push_back(string("_LW_EXEFILE_=") + get_exe_path());
+	ps.push_back(string("_LW_EXEDIR_=") + get_dir_name(get_exe_path()));
+	ps.push_back(string("_LW_TEMPDIR_=") + temp_dir);
+
+	ps.push_back(string("_LW_VERSION=") + VERSION_TEXT);
+	ps.push_back(string("_LW_COMPILE_TIME=") + __DATE__ " " __TIME__);
+
+	int envLen = 1;
+	for (auto s : ps)
+		envLen += s.length() + 1;
+	char* env = new char[envLen];
+	memset(env, 0, envLen);
+
+	int offset = 0;
+	for (auto s : ps)
+	{
+		int len = s.length();
+		memcpy(env + offset, s.c_str(), s.length());
+		offset += len + 1;
+	}
+
+	return env;
 }
 
 static void replace_variables(string& exec, string temp_dir)
@@ -143,7 +171,9 @@ int run_program(string file, string temp_dir, std::string additional_argument, b
 	printf("temp dir: %s\n", temp_dir.c_str());
 	string exec = optdata.exec;
 	replace_variables(exec, temp_dir);
-	int rt = start_child_process(temp_dir, exec + additional_argument, no_output);
+	char* env = getEnvironment(temp_dir);
+
+	int rt = start_child_process(temp_dir, exec + additional_argument, env, no_output);
 
 	if (!console_visible)
 		set_window_visible(true);

@@ -12,7 +12,7 @@
 		char* buf = new char[500]; \
 		std::string cause = err_msg; \
 		std::string last_error_msg = get_last_error_message(); \
-		sprintf_s(buf, 500, "Error occured: %d\nfile: %s on line %d\nfunc: %s\ncompilation-time: %s %s\n\ncause: %s\n\nprobable reason: %s(%d)", \
+		sprintf_s(buf, 500, "Error occured: %d\nfile: %s on line %d\nfunc: %s\ncompile-time: %s %s\n\ncause: %s\n\nprobable reason: %s(%d)", \
 							expression, __FILE__, __LINE__,  __FUNCTION__, __DATE__, __TIME__, cause.c_str(), last_error_msg.c_str(), GetLastError()); \
 		show_dialog(PROJECT_NAME" "VERSION_TEXT, buf); \
 		delete[] buf; \
