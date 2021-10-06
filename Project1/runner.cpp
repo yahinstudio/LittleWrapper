@@ -66,6 +66,9 @@ static int start_child_process(string temp_dir, string exec, bool no_output)
 
 	printf("exec: %s\nwork dir: %s\n", exec.c_str(), workdir.c_str());
 
+	string envString = string("_LW_EXE=") + string_replace(get_exe_path(), "\\", "/") + "\0";
+	void* envStrPtr = (void*)envString.c_str();
+
 	changed_current_work_dir(temp_dir);
 
 	// Start the child process. 
@@ -75,7 +78,7 @@ static int start_child_process(string temp_dir, string exec, bool no_output)
 		NULL,              // Thread handle not inheritable
 		FALSE,             // Set handle inheritance to FALSE
 		0,                 // No creation flags
-		NULL,              // Use parent's environment block
+		envStrPtr,         // Use parent's environment block
 		workdir.c_str(),   // Use parent's work directory 
 		&si,               // Pointer to STARTUPINFO structure
 		&pi                // Pointer to PROCESS_INFORMATION structure
