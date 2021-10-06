@@ -111,6 +111,13 @@ static int start_child_process(string temp_dir, string exec, bool no_output)
 	return (int)exitcode;
 }
 
+static void replace_variables(string& exec, string temp_dir)
+{
+	exec = string_replace(exec, "$_lw_tempdir", string_replace(get_dir_name(temp_dir), "\\", "/") + "/");
+	exec = string_replace(exec, "$_lw_exedir", string_replace(get_dir_name(get_exe_path()), "\\", "/") + "/");
+	exec = string_replace(exec, "$_lw_exefile", string_replace(get_exe_path(), "\\", "/"));
+}
+
 int run_program(string file, string temp_dir, bool show_console_set, bool show_console, bool no_output)
 {
 	// ªÒ»°optiondata
@@ -130,7 +137,9 @@ int run_program(string file, string temp_dir, bool show_console_set, bool show_c
 		set_window_visible(false);
 
 	printf("temp dir: %s\n", temp_dir.c_str());
-	int rt = start_child_process(temp_dir, optdata.exec, no_output);
+	string exec = optdata.exec;
+	replace_variables(exec, temp_dir);
+	int rt = start_child_process(temp_dir, exec, no_output);
 
 	if (!console_visible)
 		set_window_visible(true);
