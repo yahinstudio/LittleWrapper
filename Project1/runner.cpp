@@ -113,8 +113,8 @@ static int start_child_process(string temp_dir, string exec, bool no_output)
 
 static void replace_variables(string& exec, string temp_dir)
 {
-	exec = string_replace(exec, "$_lw_tempdir", string_replace(get_dir_name(temp_dir), "\\", "/") + "/");
-	exec = string_replace(exec, "$_lw_exedir", string_replace(get_dir_name(get_exe_path()), "\\", "/") + "/");
+	exec = string_replace(exec, "$_lw_tempdir", string_replace(get_dir_name(temp_dir), "\\", "/"));
+	exec = string_replace(exec, "$_lw_exedir", string_replace(get_dir_name(get_exe_path()), "\\", "/"));
 	exec = string_replace(exec, "$_lw_exefile", string_replace(get_exe_path(), "\\", "/"));
 }
 
