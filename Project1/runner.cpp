@@ -72,8 +72,8 @@ static int start_child_process(string temp_dir, string exec, bool no_output)
 	changed_current_work_dir(temp_dir);
 
 	// Start the child process. 
-	bool success = CreateProcessA(nullptr,   // No module name (use command line)
-		(LPSTR)exec.c_str(),               // Command line
+	bool success = CreateProcessA(nullptr,      // No module name (use command line)
+		(LPSTR)exec.c_str(),                    // Command line
 		NULL,              // Process handle not inheritable
 		NULL,              // Thread handle not inheritable
 		FALSE,             // Set handle inheritance to FALSE
@@ -118,7 +118,7 @@ static void replace_variables(string& exec, string temp_dir)
 	exec = string_replace(exec, "$_lw_exefile", string_replace(get_exe_path(), "\\", "/"));
 }
 
-int run_program(string file, string temp_dir, bool show_console_set, bool show_console, bool no_output)
+int run_program(string file, string temp_dir, std::string additional_argument, bool show_console_set, bool show_console, bool no_output)
 {
 	// ªÒ»°optiondata
 	cJSON* meta;
@@ -139,7 +139,7 @@ int run_program(string file, string temp_dir, bool show_console_set, bool show_c
 	printf("temp dir: %s\n", temp_dir.c_str());
 	string exec = optdata.exec;
 	replace_variables(exec, temp_dir);
-	int rt = start_child_process(temp_dir, exec, no_output);
+	int rt = start_child_process(temp_dir, exec + additional_argument, no_output);
 
 	if (!console_visible)
 		set_window_visible(true);

@@ -33,6 +33,9 @@ struct app_arguments
     // 抑制子进程输出
     bool suppress_output = false;
 
+    // 启动参数传递
+    std::string start_argument = "";
+
     // 帮助
     bool help = false;
 

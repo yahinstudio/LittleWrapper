@@ -38,12 +38,12 @@ void output_help(bool disabled_dialog_in_winmain=true)
     printf("%s", help_messge.c_str());
 }
 
-int run_prog(string executable, bool show_console_set, bool show_console, bool no_output)
+int run_prog(string executable, string argument_pass, bool show_console_set, bool show_console, bool no_output)
 {
     string temp_dir = get_temp_directory() + "LW-" + get_string_md5(executable).substr(0, 8);
 
     printf("execute\n");
-    return run_program(executable, temp_dir, show_console_set, show_console, no_output);
+    return run_program(executable, temp_dir, argument_pass, show_console_set, show_console, no_output);
 }
 
 int functions(app_arguments args, string workdir, string executable)
@@ -121,7 +121,7 @@ int functions(app_arguments args, string workdir, string executable)
         string source = executable;
         lw_detail(source);
     } else {
-        return run_prog(get_exe_path(), args.show_console != args.hide_console, args.show_console, args.suppress_output);
+        return run_prog(get_exe_path(), args.start_argument, args.show_console != args.hide_console, args.show_console, args.suppress_output);
     }
 
     return 0;
