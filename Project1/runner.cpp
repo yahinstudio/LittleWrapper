@@ -109,9 +109,13 @@ static int start_child_process(string temp_dir, string exec, char* env, bool no_
 	return (int)exitcode;
 }
 
-static char* getEnvironment(string temp_dir)
+static char* get_environments_of_subprocess(string temp_dir)
 {
 	std::vector<string> ps;
+	
+	for (auto e : get_environments())
+		ps.push_back(e);
+
 	ps.push_back(string("_LW_EXEFILE=") + string_replace(get_exe_path(), "\\", "/"));
 	ps.push_back(string("_LW_EXEDIR=") + string_replace(get_dir_name(get_exe_path()), "\\", "/"));
 	ps.push_back(string("_LW_TEMPDIR=") + string_replace(temp_dir, "\\", "/"));
@@ -171,9 +175,11 @@ int run_program(string file, string temp_dir, std::string additional_argument, b
 	printf("temp dir: %s\n", temp_dir.c_str());
 	string exec = optdata.exec;
 	replace_variables(exec, temp_dir);
-	char* env = getEnvironment(temp_dir);
+	char* env = get_environments_of_subprocess(temp_dir);
 
 	int rt = start_child_process(temp_dir, exec + additional_argument, env, no_output);
+
+	delete env;
 
 	if (!console_visible)
 		set_window_visible(true);
