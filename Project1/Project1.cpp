@@ -29,7 +29,7 @@ void output_help(bool disabled_dialog_in_winmain=true)
     help_messge += "  --show-console                                  - run with console visible(default value, higher priority).\n";
     help_messge += "  --hide-console  or  -x                          - run with console invisible.\n";
     help_messge += "  --suppress-output  or  -u                       - suppress the output of decompresing.\n";
-    help_messge += "  --argument-pass  or  -a                         - pass strings as startup parameters to the program bundled inside.\n";
+    help_messge += "  --parameter-pass  or  -a                        - pass strings as startup parameters to the program bundled inside.\n";
     
 #if defined(ENTRANCE_WINMAIN)
     if (!disabled_dialog_in_winmain)
@@ -39,12 +39,12 @@ void output_help(bool disabled_dialog_in_winmain=true)
     printf("%s", help_messge.c_str());
 }
 
-int run_prog(string executable, string argument_pass, bool show_console_set, bool show_console, bool no_output)
+int run_prog(string executable, string parameter_additional, bool show_console_set, bool show_console, bool no_output)
 {
     string temp_dir = get_temp_directory() + "LW-" + get_string_md5(executable).substr(0, 8);
 
     printf("execute\n");
-    return run_program(executable, temp_dir, argument_pass, show_console_set, show_console, no_output);
+    return run_program(executable, temp_dir, parameter_additional, show_console_set, show_console, no_output);
 }
 
 int functions(app_arguments args, string workdir, string executable)

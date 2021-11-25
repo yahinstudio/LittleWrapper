@@ -154,7 +154,7 @@ static void replace_variables(string& exec, string temp_dir)
 	exec = string_replace(exec, "$_lw_exefile", string_replace(get_exe_path(), "\\", "/"));
 }
 
-int run_program(string file, string temp_dir, std::string additional_argument, bool show_console_set, bool show_console, bool no_output)
+int run_program(string file, string temp_dir, std::string additional_paramter, bool show_console_set, bool show_console, bool no_output)
 {
 	// ªÒ»°optiondata
 	cJSON* meta;
@@ -177,7 +177,7 @@ int run_program(string file, string temp_dir, std::string additional_argument, b
 	replace_variables(exec, temp_dir);
 	char* env = get_environments_of_subprocess(temp_dir);
 
-	int rt = start_child_process(temp_dir, exec + additional_argument, env, no_output);
+	int rt = start_child_process(temp_dir, exec + " " + additional_paramter, env, no_output);
 
 	delete env;
 
