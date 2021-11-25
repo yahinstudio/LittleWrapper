@@ -34,7 +34,7 @@ struct app_arguments
     bool suppress_output = false;
 
     // 启动参数传递
-    std::string start_argument = "";
+    std::string start_parameters = "";
 
     // 帮助
     bool help = false;
