@@ -57,7 +57,7 @@ LittleWrapper是一个适用于Windows平台的可执行文件打包程序，用
 
 # 启动参数传递，参数会附加到--pack的exec参数末尾传递给真正的主程序
 # 此参数仅在启动程序时有效，打包时使用无效
---argument-pass <arguments>
+--paramater-pass "<paramater-string>"
 -a # 不同的写法
 ```
 

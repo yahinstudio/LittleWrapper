@@ -29,7 +29,8 @@ void output_help(bool disabled_dialog_in_winmain=true)
     help_messge += "  --show-console                                  - run with console visible(default value, higher priority).\n";
     help_messge += "  --hide-console  or  -x                          - run with console invisible.\n";
     help_messge += "  --suppress-output  or  -u                       - suppress the output of decompresing.\n";
-
+    help_messge += "  --argument-pass  or  -a                         - pass strings as startup parameters to the program bundled inside.\n";
+    
 #if defined(ENTRANCE_WINMAIN)
     if (!disabled_dialog_in_winmain)
         winmain_dialog("参数不正确", help_messge);
@@ -121,7 +122,7 @@ int functions(app_arguments args, string workdir, string executable)
         string source = executable;
         lw_detail(source);
     } else {
-        return run_prog(get_exe_path(), args.start_argument, args.show_console != args.hide_console, args.show_console, args.suppress_output);
+        return run_prog(get_exe_path(), args.start_parameters, args.show_console != args.hide_console, args.show_console, args.suppress_output);
     }
 
     return 0;

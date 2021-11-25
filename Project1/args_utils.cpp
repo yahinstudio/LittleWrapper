@@ -23,7 +23,7 @@ app_arguments parse_args(int argc, char** argv)
         {"show-console",    no_argument,         0,  's'},
         {"hide-console",    no_argument,         0,  'x'},
         {"suppress-output", no_argument,         0,  'u'},
-        {"argument-pass",   required_argument,   0,  'a'},
+        {"parameter-pass",   required_argument,   0,  'a'},
         {0, 0, 0, 0}
     };
 
@@ -69,9 +69,9 @@ app_arguments parse_args(int argc, char** argv)
         case 'u': // suppress-output
             result.suppress_output = true;
             break;
-        case 'a': // argument-pass
+        case 'a': // parameter-pass
             if (optarg)
-                result.start_argument = optarg;
+                result.start_parameters = optarg;
             break;
         case ':': // 缺失选项参数
             result.optarg_required = true;
