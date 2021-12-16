@@ -1,5 +1,5 @@
 #include "args_utils.h"
-#include "wingetopt-0.95/getopt.h"
+#include "libs/wingetopt-0.95/getopt.h"
 
 app_arguments parse_args(int argc, char** argv)
 {

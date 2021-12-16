@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "utils.h"
 #include "env.h"
-#include "cJSON-1.7.14/cJSON.h"
+#include "libs/cJSON-1.7.14/cJSON.h"
 #include "archive.h"
 #include "dir_utils.h"
 #include "wrapper.h"

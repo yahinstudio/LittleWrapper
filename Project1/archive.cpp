@@ -2,7 +2,7 @@
 #include "iostream"
 #include "fstream"
 #include "debug.h"
-#include "zlib-1.2.11/zlib.h"
+#include "libs/zlib-1.2.11/zlib.h"
 
 #define CHUNK 64 * 1024
 

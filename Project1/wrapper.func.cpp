@@ -1,7 +1,7 @@
 #include "wrapper.h"
 #include "iostream"
 #include "fstream"
-#include "cJSON-1.7.14/cJSON.h"
+#include "libs/cJSON-1.7.14/cJSON.h"
 #include "utils.h"
 #include "project.h"
 #include "debug.h"
@@ -10,7 +10,7 @@
 #include "direct.h" // mkdir
 #include "archive.h"
 #include "magic.h"
-#include "md5/md5.h"
+#include "libs/md5/md5.h"
 #include "single_ins.h"
 
 using namespace std;

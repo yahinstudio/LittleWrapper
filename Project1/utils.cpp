@@ -4,7 +4,7 @@
 #include "io.h" // _findata_t, _find*(), _A_*
 #include <iostream>
 #include <fstream>
-#include "md5/md5.h"
+#include "libs/md5/md5.h"
 #include "direct.h" // rmdir()
 #include "winuser.h"
 #include "project.h"
