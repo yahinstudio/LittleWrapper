@@ -10,18 +10,9 @@
 
 using namespace std;
 
-void ps()
-{
-    printf("asfsaf\n");
-    throw lw_base_exception("PX");
-}
-
 int little_wrapper_app::main(int argc, char** argv)
 {
     try {
-
-        ps();
-
         app_args args = parse_app_args(argc, argv);
         string work_dir = get_current_work_dir();
         string module_path = get_exe_path();
@@ -30,17 +21,14 @@ int little_wrapper_app::main(int argc, char** argv)
     catch (lw_base_exception& e) {
         printf("%s\n", e.what());
         exception_thrown(e);
-        //show_dialog(PROJECT_NAME " " VERSION_TEXT " Exception occured", e.what());
     }
     catch (exception& e) {
         printf("Unknown Exception: %s.\n", e.what());
-        error_check(false, e.what());
-        //show_dialog(PROJECT_NAME " " VERSION_TEXT " Exception occured", e.what());
+        exception_thrown(e);
     }
     catch (...) {
         printf("Unknown Error occurred");
-        error_check(false, "Unknown Error occurred");
-        //show_dialog(PROJECT_NAME " " VERSION_TEXT " Exception occured", "Unknown Error occurred");
+        unknown_exception_thrown();
     }
 
     return 1;

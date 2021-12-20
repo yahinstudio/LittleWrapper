@@ -1,8 +1,7 @@
 #include "debug.h"
-#include "string"
+#include <string>
 #include "utils/general_utils.h"
-#include "assert.h" // assert()
-#include "windows.h"
+#include <windows.h>
 #include "project.h"
 #include "exceptions/exceptions.h"
 
@@ -13,6 +12,7 @@ void _error_check(int expression, std::string err_msg, const char* file, int lin
 	if (expression == 0)
 	{
 		char* buf = new char[DEBUG_MAX_ERROR_MESSAGE_LEN];
+		StackTraceback st;
 
 		sprintf_s(buf, DEBUG_MAX_ERROR_MESSAGE_LEN,
 			"expression-value: %d\n"
@@ -21,12 +21,12 @@ void _error_check(int expression, std::string err_msg, const char* file, int lin
 			"compile-time: %s %s\n"
 			"cause: %s\n"
 			"probable reason: %s(%d)\n"
-	#ifdef _DEBUG
-			"_________________________________traceback________________________________"
+#ifdef ENABLED_TRACKBACK
+			"___________________________________traceback______________________________"
 			"\n%s",
-	#else
+#else
 			,
-	#endif
+#endif
 			expression,
 			file,
 			line,
@@ -34,44 +34,80 @@ void _error_check(int expression, std::string err_msg, const char* file, int lin
 			data, time,
 			err_msg.c_str(),
 			get_last_error_message().c_str(), GetLastError()
-	#ifdef _DEBUG
+#ifdef ENABLED_TRACKBACK
 			,
-			traceback::stack_trace_text(true).c_str()
-	#endif
+			st.to_string().c_str()
+#endif
 		);
 
-	#ifdef _DEBUG
-		printf("---------------------------\n%s---------------------------\n", traceback::stack_trace_text(false).c_str());
-	#endif
+		printf("---------------------------\n%s---------------------------\n", st.to_string().c_str());
 
-		MessageBoxA(nullptr, buf, PROJECT_NAME " " VERSION_TEXT " Error occured", MB_ICONERROR | MB_OK);
-
+#ifndef ENABLED_TRACKBACK
+		MessageBoxA(nullptr, buf, PROJECT_NAME " " VERSION_TEXT " Error occurred", MB_ICONERROR | MB_OK);
+#endif
 		delete[] buf;
 		exit(1);
 	}
 }
 
-void _exception_thrown(lw_base_exception ex, const char* file, int line, const char* function, const char* data, const char* time)
+void _exception_thrown(exception ex, const char* file, int line, const char* function, const char* data, const char* time)
 {
 	char* buf = new char[DEBUG_MAX_ERROR_MESSAGE_LEN];
+	StackTraceback st(ex);
 
 	sprintf_s(buf, DEBUG_MAX_ERROR_MESSAGE_LEN,
 		"exception thrown: %s\n"
-		"compile-time: %s %s\n"
-		"cause: %s\n"
-		"_________________________________traceback________________________________"
+		"compile time: %s %s\n"
+		"message: %s\n"
+#ifdef ENABLED_TRACKBACK
+		"_______________________________traceback__________________________________"
 		"\n%s",
+#else
+		,
+#endif
 		typeid(ex).name(),
 		__DATE__, __TIME__,
-		ex.what(),
-		traceback::stack_trace_text(true).c_str()
+		ex.what()
+#ifdef ENABLED_TRACKBACK
+		,
+		st.to_string().c_str()
+#endif
 	);
-	printf("---------------------------\n%s---------------------------\n", traceback::stack_trace_text(false).c_str());
+	printf("---------------------------\n%s---------------------------\n", st.to_string().c_str());
 
-#ifdef _DEBUG
-	MessageBoxA(nullptr, buf, PROJECT_NAME " " VERSION_TEXT " Error occured", MB_ICONERROR | MB_OK);
-#endif // _DEBUG
+#ifndef ENABLED_TRACKBACK
+	MessageBoxA(nullptr, buf, PROJECT_NAME " " VERSION_TEXT " Error occurred", MB_ICONERROR | MB_OK);
+#endif
 	
+	delete[] buf;
+	exit(1);
+}
+
+void unknown_exception_thrown()
+{
+	char* buf = new char[DEBUG_MAX_ERROR_MESSAGE_LEN];
+	StackTraceback st(StackWalker::AfterCatch);
+
+	sprintf_s(buf, DEBUG_MAX_ERROR_MESSAGE_LEN,
+		"compile time: %s %s\n"
+#ifdef ENABLED_TRACKBACK
+		"_______________________________traceback__________________________________"
+		"\n%s",
+#else
+		,
+#endif
+		__DATE__, __TIME__
+#ifdef ENABLED_TRACKBACK
+		,
+		st.to_string().c_str()
+#endif
+	);
+	printf("---------------------------\n%s---------------------------\n", st.to_string().c_str());
+
+#ifndef ENABLED_TRACKBACK
+	MessageBoxA(nullptr, buf, PROJECT_NAME " " VERSION_TEXT " Error occurred", MB_ICONERROR | MB_OK);
+#endif
+
 	delete[] buf;
 	exit(1);
 }
@@ -97,4 +133,3 @@ string get_last_error_message()
 
 	return string_replace(result, "\r\n", "");
 }
-

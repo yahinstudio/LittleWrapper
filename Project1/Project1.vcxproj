@@ -162,6 +162,8 @@
     <ClInclude Include="app_argument.h" />
     <ClInclude Include="archive.h" />
     <ClInclude Include="archiver.h" />
+    <ClInclude Include="dump.h" />
+    <ClInclude Include="libs\stack_walker\StackWalker.h" />
     <ClInclude Include="traceback.h" />
     <ClInclude Include="exceptions\json_exceptions.h" />
     <ClInclude Include="json_obj.h" />
@@ -456,7 +458,10 @@
     <ClCompile Include="app_argument.cpp" />
     <ClCompile Include="archive.cpp" />
     <ClCompile Include="archiver.cpp" />
+    <ClCompile Include="dump.cpp" />
     <ClCompile Include="json_obj.cpp" />
+    <ClCompile Include="libs\stack_walker\StackWalker.cpp" />
+    <ClCompile Include="traceback.cpp" />
     <ClCompile Include="utils\env_utils.cpp" />
     <ClCompile Include="libs\cJSON-1.7.14\cJSON.c" />
     <ClCompile Include="libs\cJSON-1.7.14\cJSON_Utils.c" />

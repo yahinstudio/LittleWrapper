@@ -1,10 +1,5 @@
 #pragma once
 #include <string>
-#include <assert.h>
-#include <windows.h>
-#include "utils/general_utils.h"
-#include "project.h"
-#include "traceback.h"
 #include "exceptions/exceptions.h"
 
 #define DEBUG_MAX_ERROR_MESSAGE_LEN (8 * 1024)
@@ -15,6 +10,8 @@
 
 void _error_check(int expression, std::string err_msg, const char* file, int line, const char* function, const char* data, const char* time);
 
-void _exception_thrown(lw_base_exception ex, const char* file, int line, const char* function, const char* data, const char* time);
+void _exception_thrown(std::exception ex, const char* file, int line, const char* function, const char* data, const char* time);
+
+void unknown_exception_thrown();
 
 std::string get_last_error_message();

@@ -882,6 +882,12 @@
     <ClInclude Include="traceback.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="libs\stack_walker\StackWalker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="dump.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="openssl-1.1.1k\fuzz\rand.inc">
@@ -983,6 +989,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="json_obj.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\stack_walker\StackWalker.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="traceback.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dump.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

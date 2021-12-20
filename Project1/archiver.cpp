@@ -137,12 +137,14 @@ archiver& archiver::operator=(archiver& other)
 {
     file = other.file;
     stream = other.stream;
+    return *this;
 }
 
 archiver& archiver::operator=(archiver&& other)
 {
     file = other.file;
     stream = other.stream;
+    return *this;
 }
 
 archiver::lw_options archiver::get_options(json_obj metadata)
