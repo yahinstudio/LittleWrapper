@@ -40,7 +40,7 @@ void _error_check(int expression, std::string err_msg, const char* file, int lin
 #endif
 		);
 
-		printf("---------------------------\n%s---------------------------\n", st.to_string().c_str());
+		printf("%s\n", buf);
 
 #ifndef ENABLED_TRACKBACK
 		MessageBoxA(nullptr, buf, PROJECT_NAME " " VERSION_TEXT " Error occurred", MB_ICONERROR | MB_OK);
@@ -50,7 +50,7 @@ void _error_check(int expression, std::string err_msg, const char* file, int lin
 	}
 }
 
-void _exception_thrown(exception ex, const char* file, int line, const char* function, const char* data, const char* time)
+void exception_thrown(exception& ex)
 {
 	char* buf = new char[DEBUG_MAX_ERROR_MESSAGE_LEN];
 	StackTraceback st(ex);
@@ -73,7 +73,8 @@ void _exception_thrown(exception ex, const char* file, int line, const char* fun
 		st.to_string().c_str()
 #endif
 	);
-	printf("---------------------------\n%s---------------------------\n", st.to_string().c_str());
+
+	printf("%s\n", buf);
 
 #ifndef ENABLED_TRACKBACK
 	MessageBoxA(nullptr, buf, PROJECT_NAME " " VERSION_TEXT " Error occurred", MB_ICONERROR | MB_OK);
@@ -102,7 +103,8 @@ void unknown_exception_thrown()
 		st.to_string().c_str()
 #endif
 	);
-	printf("---------------------------\n%s---------------------------\n", st.to_string().c_str());
+
+	printf("%s\n", buf);
 
 #ifndef ENABLED_TRACKBACK
 	MessageBoxA(nullptr, buf, PROJECT_NAME " " VERSION_TEXT " Error occurred", MB_ICONERROR | MB_OK);

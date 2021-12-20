@@ -16,7 +16,9 @@ void create_dump_file(std::string dump_file)
 	HANDLE process = GetCurrentProcess();
 	DWORD process_id = GetCurrentProcessId();
 
-	MiniDumpWriteDump(process, process_id, file, MiniDumpWithFullMemory, NULL, NULL, NULL);
+	//MiniDumpWriteDump(process, process_id, file, MiniDumpWithFullMemory, NULL, NULL, NULL);
+
+	MiniDumpWriteDump(process, process_id, file, MiniDumpNormal, NULL, NULL, NULL);
 
 	CloseHandle(file);
 }

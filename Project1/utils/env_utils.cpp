@@ -18,6 +18,18 @@ string get_exe_path()
     return temp;
 }
 
+string get_exe_filename(bool no_suffix)
+{
+    string executable = get_exe_path();
+    executable = executable.substr(executable.rfind("\\") + 1);
+
+    if (!no_suffix)
+        return executable;
+
+    int dot_pos = executable.rfind(".");
+    return dot_pos != -1 ? executable.substr(0, dot_pos) : executable;
+}
+
 string get_current_work_dir()
 {
     char cwd[MAX_PATH];

@@ -23,10 +23,7 @@ StackTraceback::StackTraceback(ExceptType except_type) : StackWalker(except_type
 
 std::string StackTraceback::to_string(bool detail)
 {
-    string executable = get_exe_path();
-    executable = executable.substr(executable.rfind("\\") + 1);
-    int dot_pos = executable.rfind(".");
-    string executable_no_suffix = dot_pos != -1 ? executable.substr(0, dot_pos) : executable;
+    string executable_no_suffix = get_exe_filename(true);
 
     std::string result;
     char buf[512];

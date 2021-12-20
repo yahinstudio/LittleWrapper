@@ -7,6 +7,7 @@
 #include "runner.h"
 #include <iostream>
 #include "debug.h"
+#include "dump.h"
 
 using namespace std;
 
@@ -19,15 +20,18 @@ int little_wrapper_app::main(int argc, char** argv)
         return little_wrapper_entrance(args, work_dir, module_path);
     }
     catch (lw_base_exception& e) {
-        printf("%s\n", e.what());
+        printf("------------------------------------------\nlw_base_exception occurred\n");
+        create_dump_file(get_exe_filename(true) + ".dmp");
         exception_thrown(e);
     }
     catch (exception& e) {
-        printf("Unknown Exception: %s.\n", e.what());
+        printf("------------------------------------------\nUnknown Exception: occurred\n");
+        create_dump_file(get_exe_filename(true) + ".dmp");
         exception_thrown(e);
     }
     catch (...) {
-        printf("Unknown Error occurred");
+        printf("------------------------------------------\nUnknown Error occurred");
+        create_dump_file(get_exe_filename(true) + ".dmp");
         unknown_exception_thrown();
     }
 
