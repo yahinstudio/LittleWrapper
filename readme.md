@@ -61,9 +61,13 @@ LittleWrapper是一个适用于Windows平台的可执行文件打包程序，用
 -a # 不同的写法
 ```
 
-引用的开源项目：
+### 开源项目
 
-+ [zlib](http://www.zlib.net)
-+ [wingetopt](https://github.com/alex85k/wingetopt)
-+ [cjson](https://sourceforge.net/projects/cjson)
-+ [md5 - 来源CSDN博客](https://blog.csdn.net/wudishine/article/details/42466831)
+感谢以下开源项目的作者！
+
++ [zlib](http://www.zlib.net)：压缩算法支持库
++ [wingetopt](https://github.com/alex85k/wingetopt)：CLI参数解析库
++ [cjson](https://sourceforge.net/projects/cjson)：JSON解析和生成库
++ [md5](https://blog.csdn.net/wudishine/article/details/42466831)：MD5散列算法支持
++ [StackWalker](https://github.com/JochenKalmbach/StackWalker)：CPP的调用堆栈支持库
+
