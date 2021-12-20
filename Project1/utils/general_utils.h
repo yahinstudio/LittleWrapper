@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "libs/cJSON-1.7.14/cJSON.h"
+#include "../libs/cJSON-1.7.14/cJSON.h"
 
 wchar_t* from_char_to_wchar(char* str);
 
@@ -37,8 +37,6 @@ bool is_file_a_dir(std::string path);
 void remove_dir(std::string path);
 
 void show_dialog(std::string title, std::string text);
-
-void winmain_dialog(std::string title, std::string content);
 
 void set_window_visible(bool visible);
 

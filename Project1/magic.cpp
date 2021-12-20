@@ -2,14 +2,23 @@
 #include "iostream"
 #include "fstream"
 
+#define MAGIC_HEADER "0123456789abcdefghijkmnlopqrtsuvwxyz|"
+#define MAGIC_LEN (sizeof(MAGIC_HEADER) / sizeof(char) - 1)
+#define PRESERVE_LEN 1024
+
 using namespace std;
 
-size_t get_magic_offset(fstream& fs, uint8_t* magic, int magic_len)
+uint8_t preserveSection[PRESERVE_LEN] = MAGIC_HEADER "{\"offset\":0, \"len\":0}";
+
+static size_t get_magic_offset(fstream& fin)
 {
+    uint8_t* magic = (uint8_t*) MAGIC_HEADER;
+    int magic_len = MAGIC_LEN;
+
     size_t result = 0;
 
-    fs.clear();
-    fs.seekg(0, fs.beg);
+    fin.clear();
+    fin.seekg(0, fin.beg);
 
     //fs.seekg(0, fs.end);
     //int file_len = fs.tellg();
@@ -25,8 +34,8 @@ size_t get_magic_offset(fstream& fs, uint8_t* magic, int magic_len)
     size_t totalRead = 0;
     while (true)
     {
-        fs.read(buf, buf_len);
-        auto readBytes = (size_t)fs.gcount();
+        fin.read(buf, buf_len);
+        auto readBytes = (size_t)fin.gcount();
         totalRead += readBytes;
 
         for (size_t i = 0; i < readBytes; i++)
@@ -93,7 +102,18 @@ size_t get_magic_offset(fstream& fs, uint8_t* magic, int magic_len)
 
     delete[] buf;
 
-    fs.clear();
-    fs.seekg(0, fs.beg);
+    fin.clear();
+    fin.seekg(0, fin.beg);
     return result;
+}
+
+size_t get_jumpdata_address(fstream& fin)
+{
+    size_t magic_offset = get_magic_offset(fin);
+    return magic_offset != 0 ? magic_offset + MAGIC_LEN : 0;
+}
+
+string get_preserved_data()
+{
+    return string((char*) preserveSection);
 }

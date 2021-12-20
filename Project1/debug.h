@@ -1,29 +1,20 @@
 #pragma once
-#include "string"
-#include "utils.h"
-#include "assert.h"
-#include "project.h" // ENABLED_ERROR_CHECK
-#include "windows.h"
+#include <string>
+#include <assert.h>
+#include <windows.h>
+#include "utils/general_utils.h"
+#include "project.h"
+#include "traceback.h"
+#include "exceptions/exceptions.h"
 
-#if defined(ENABLED_ERROR_CHECK)
+#define DEBUG_MAX_ERROR_MESSAGE_LEN (8 * 1024)
 
-#define error_check(expression, err_msg) do { \
-	if(expression == 0) { \
-		char* buf = new char[500]; \
-		std::string cause = err_msg; \
-		std::string last_error_msg = get_last_error_message(); \
-		sprintf_s(buf, 500, "Error occured: %d\nfile: %s on line %d\nfunc: %s\ncompile-time: %s %s\n\ncause: %s\n\nprobable reason: %s(%d)", \
-							expression, __FILE__, __LINE__,  __FUNCTION__, __DATE__, __TIME__, cause.c_str(), last_error_msg.c_str(), GetLastError()); \
-		show_dialog(PROJECT_NAME" "VERSION_TEXT, buf); \
-		delete[] buf; \
-		exit(1); \
-	} \
-} while (0)
+#define error_check(expression, err_msg) _error_check(expression, err_msg, __FILE__, __LINE__,  __FUNCTION__, __DATE__, __TIME__)
 
-#else
+#define exception_thrown(ex) _exception_thrown(ex, __FILE__, __LINE__,  __FUNCTION__, __DATE__, __TIME__);
 
-void error_check(bool expression, std::string err_msg);
+void _error_check(int expression, std::string err_msg, const char* file, int line, const char* function, const char* data, const char* time);
 
-#endif
+void _exception_thrown(lw_base_exception ex, const char* file, int line, const char* function, const char* data, const char* time);
 
 std::string get_last_error_message();

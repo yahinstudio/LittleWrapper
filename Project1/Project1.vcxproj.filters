@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="utils.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="env.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="archive.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -66,10 +60,7 @@
     <ClInclude Include="libs\wingetopt-0.95\getopt.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="dir_utils.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="wrapper.h">
+    <ClInclude Include="utils\dir_utils.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="project.h">
@@ -861,10 +852,34 @@
     <ClInclude Include="pcre2-10.37\pcre2.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="args_utils.h">
+    <ClInclude Include="single_ins.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="single_ins.h">
+    <ClInclude Include="little_wrapper_app.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\exceptions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="app_argument.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\general_utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\env_utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="archiver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="json_obj.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\json_exceptions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="traceback.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -934,22 +949,13 @@
     <ClCompile Include="archive.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="dir_utils.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="env.cpp">
+    <ClCompile Include="utils\dir_utils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="magic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Project1.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="utils.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="wrapper.cpp">
+    <ClCompile Include="app_main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="runner.cpp">
@@ -958,13 +964,25 @@
     <ClCompile Include="debug.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="args_utils.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="single_ins.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="wrapper.func.cpp">
+    <ClCompile Include="little_wrapper_app.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="app_argument.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\general_utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\env_utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="archiver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="json_obj.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

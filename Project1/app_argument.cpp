@@ -1,9 +1,9 @@
-#include "args_utils.h"
+#include "app_argument.h"
 #include "libs/wingetopt-0.95/getopt.h"
 
-app_arguments parse_args(int argc, char** argv)
+app_args parse_app_args(int argc, char** argv)
 {
-    app_arguments result;
+    app_args result;
 
     result.argc = argc;
     result.argv = argv;
@@ -54,7 +54,7 @@ app_arguments parse_args(int argc, char** argv)
         case 'e': // extract
             result.extract = true;
             //printf("<<< %s >>>\n", optarg?"not null":"null");
-            if(optarg)
+            if (optarg)
                 result.extract_dest = optarg;
             break;
         case 'd': // detail

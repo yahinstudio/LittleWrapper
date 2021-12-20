@@ -1,7 +1,7 @@
 #pragma once
-#include "string"
+#include <string>
 
-struct app_arguments
+struct app_args
 {
     // 通用参数
     std::string input = ""; // unused
@@ -44,4 +44,4 @@ struct app_arguments
     char** argv;
 };
 
-app_arguments parse_args(int argc, char** argv);
+app_args parse_app_args(int argc, char** argv);

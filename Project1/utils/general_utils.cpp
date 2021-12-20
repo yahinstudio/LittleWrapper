@@ -1,20 +1,19 @@
-#include "utils.h"
-#include "windows.h" // WideCharToMultiByte(), CP_UTF8, DWORD
+#include "general_utils.h"
+#include "windows.h"
 #include "stdio.h"
-#include "io.h" // _findata_t, _find*(), _A_*
+#include "io.h"
 #include <iostream>
 #include <fstream>
-#include "libs/md5/md5.h"
-#include "direct.h" // rmdir()
+#include "../libs/md5/md5.h"
+#include "direct.h"
 #include "winuser.h"
-#include "project.h"
 
 using namespace std;
 
 wchar_t* from_char_to_wchar(char* str)
 {
     int len = MultiByteToWideChar(CP_UTF8, 0, str, (int)strlen(str), 0, 0);
-    wchar_t* m_wchar = new wchar_t[len + 1];
+    WCHAR* m_wchar = new WCHAR[len + 1];
     MultiByteToWideChar(CP_UTF8, 0, str, (int)strlen(str), m_wchar, len);
     m_wchar[len] = '\0';
     return m_wchar;
@@ -270,13 +269,6 @@ void show_dialog(string title, string text)
 {
     printf("dialog: %s: %s\n", title.c_str(), text.c_str());
     int result = MessageBoxA(nullptr, text.c_str(), title.c_str(), MB_ICONERROR | MB_OK);
-}
-
-void winmain_dialog(string title, string content)
-{
-#if defined(ENTRANCE_WINMAIN)
-    show_dialog(title, content + "\n\n" PROJ_VER);
-#endif
 }
 
 void set_window_visible(bool visible)

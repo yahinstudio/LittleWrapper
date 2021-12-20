@@ -5,14 +5,6 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release-WinMain|Win32">
-      <Configuration>Release-WinMain</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release-WinMain|x64">
-      <Configuration>Release-WinMain</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -48,13 +40,6 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-WinMain|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -62,13 +47,6 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-WinMain|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
@@ -86,16 +64,10 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release-WinMain|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release-WinMain|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -111,12 +83,6 @@
     <IntDir>objs\$(Configuration)-$(Platform)\</IntDir>
     <OutDir>$(SolutionDir)Dest\</OutDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-WinMain|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <TargetName>lw</TargetName>
-    <IntDir>objs\$(Configuration)-$(Platform)\</IntDir>
-    <OutDir>$(SolutionDir)Dest\</OutDir>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>lw</TargetName>
@@ -124,12 +90,6 @@
     <IntDir>objs\$(Configuration)-$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-    <TargetName>lw</TargetName>
-    <OutDir>$(SolutionDir)Dest\</OutDir>
-    <IntDir>objs\$(Configuration)-$(Platform)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-WinMain|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>lw</TargetName>
     <OutDir>$(SolutionDir)Dest\</OutDir>
@@ -161,24 +121,6 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-WinMain|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;ENTRANCE_WINMAIN;_CRT_NONSTDC_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;HAVE_CONFIG_H;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <Optimization>MinSpace</Optimization>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -216,31 +158,20 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-WinMain|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;ENTRANCE_WINMAIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="app_argument.h" />
     <ClInclude Include="archive.h" />
-    <ClInclude Include="args_utils.h" />
+    <ClInclude Include="archiver.h" />
+    <ClInclude Include="traceback.h" />
+    <ClInclude Include="exceptions\json_exceptions.h" />
+    <ClInclude Include="json_obj.h" />
+    <ClInclude Include="utils\env_utils.h" />
+    <ClInclude Include="exceptions\exceptions.h" />
     <ClInclude Include="libs\cJSON-1.7.14\cJSON.h" />
     <ClInclude Include="libs\cJSON-1.7.14\cJSON_Utils.h" />
     <ClInclude Include="debug.h" />
-    <ClInclude Include="dir_utils.h" />
-    <ClInclude Include="env.h" />
+    <ClInclude Include="utils\dir_utils.h" />
+    <ClInclude Include="little_wrapper_app.h" />
     <ClInclude Include="magic.h" />
     <ClInclude Include="libs\md5\md5.h" />
     <ClInclude Include="openssl-1.1.1k\crypto\aes\aes_local.h" />
@@ -504,9 +435,8 @@
     <ClInclude Include="project.h" />
     <ClInclude Include="runner.h" />
     <ClInclude Include="single_ins.h" />
-    <ClInclude Include="utils.h" />
     <ClInclude Include="libs\wingetopt-0.95\getopt.h" />
-    <ClInclude Include="wrapper.h" />
+    <ClInclude Include="utils\general_utils.h" />
     <ClInclude Include="libs\zlib-1.2.11\crc32.h" />
     <ClInclude Include="libs\zlib-1.2.11\deflate.h" />
     <ClInclude Include="libs\zlib-1.2.11\gzguts.h" />
@@ -523,22 +453,23 @@
     <None Include="openssl-1.1.1k\fuzz\rand.inc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="app_argument.cpp" />
     <ClCompile Include="archive.cpp" />
-    <ClCompile Include="args_utils.cpp" />
+    <ClCompile Include="archiver.cpp" />
+    <ClCompile Include="json_obj.cpp" />
+    <ClCompile Include="utils\env_utils.cpp" />
     <ClCompile Include="libs\cJSON-1.7.14\cJSON.c" />
     <ClCompile Include="libs\cJSON-1.7.14\cJSON_Utils.c" />
     <ClCompile Include="debug.cpp" />
-    <ClCompile Include="dir_utils.cpp" />
-    <ClCompile Include="env.cpp" />
+    <ClCompile Include="utils\dir_utils.cpp" />
+    <ClCompile Include="little_wrapper_app.cpp" />
     <ClCompile Include="magic.cpp" />
     <ClCompile Include="libs\md5\md5.cpp" />
-    <ClCompile Include="Project1.cpp" />
+    <ClCompile Include="app_main.cpp" />
     <ClCompile Include="runner.cpp" />
     <ClCompile Include="single_ins.cpp" />
-    <ClCompile Include="utils.cpp" />
     <ClCompile Include="libs\wingetopt-0.95\getopt.c" />
-    <ClCompile Include="wrapper.cpp" />
-    <ClCompile Include="wrapper.func.cpp" />
+    <ClCompile Include="utils\general_utils.cpp" />
     <ClCompile Include="libs\zlib-1.2.11\adler32.c" />
     <ClCompile Include="libs\zlib-1.2.11\compress.c" />
     <ClCompile Include="libs\zlib-1.2.11\crc32.c" />

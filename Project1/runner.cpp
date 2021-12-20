@@ -1,12 +1,11 @@
 #include "runner.h"
 #include "iostream"
 #include "fstream"
-#include "wrapper.h"
-#include "utils.h"
 #include "debug.h"
-#include "env.h"
 #include "windows.h"
 #include "vector"
+#include "utils/env_utils.h"
+#include "archiver.h"
 
 using namespace std;
 
@@ -154,26 +153,25 @@ static void replace_variables(string& exec, string temp_dir)
 	exec = string_replace(exec, "$_lw_exefile", string_replace(get_exe_path(), "\\", "/"));
 }
 
-int run_program(string file, string temp_dir, std::string additional_paramter, bool show_console_set, bool show_console, bool no_output)
+int start_subprocess(string file, string temp_dir, std::string additional_paramter, bool show_console_set, bool show_console, bool no_output)
 {
-	// 获取optiondata
-	cJSON* meta;
-	lw_read_metadata(file, &meta);
-	optiondata optdata = get_optiondata(meta);
+	archiver arch(file, archiver::read_only);
+	json_obj metadata = arch.read_metadata();
+	archiver::lw_options options = arch.get_options(metadata);
 
-	bool console_visible = show_console_set ? show_console : optdata.show_console;
+	bool console_visible = show_console_set ? show_console : options.show_console;
 
 	if (!console_visible)
 		set_window_visible(false);
 
 	// 解压数据
-	lw_extract(file, temp_dir, true, no_output);
+	arch.lw_extract(temp_dir, true, no_output);
 
 	if(!console_visible)
 		set_window_visible(false);
 
 	printf("temp dir: %s\n", temp_dir.c_str());
-	string exec = optdata.exec;
+	string exec = options.exec;
 	replace_variables(exec, temp_dir);
 	char* env = get_environments_of_subprocess(temp_dir);
 
