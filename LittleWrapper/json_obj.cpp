@@ -264,11 +264,11 @@ void json_obj::set_object(string key, bool value)
 {
 	if (has_object(key))
 	{
-		check_type(get_object(key), cJSON_Number, "Bool");						
+		check_type(get_object(key), cJSON_False | cJSON_True, "Bool");						
 		cJSON_DeleteItemFromObject(root, key.c_str());
 	}
 
-	cJSON_AddBoolToObject(root, key.c_str(), value ? cJSON_True : cJSON_False);
+	cJSON_AddBoolToObject(root, key.c_str(), value);
 }
 
 void json_obj::set_object(string key, string value)
