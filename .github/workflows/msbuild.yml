@@ -9,7 +9,7 @@ on:
       version_name:
         description: 'The special version name'
         required: false
-        default: ''
+        default: '0.0.0'
 
 env:
   # Path to the solution file relative to the root of the project.
@@ -44,22 +44,20 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Build
+      env: 
+        tag_name: ${{ steps.checkout-tagname.outputs.tag_name }}
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: |
+        python3 .github\write_file.py LittleWrapper\resources\app_version.txt ${{ env.tag_name }}
         msbuild /m /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }} ${{env.SOLUTION_FILE_PATH}}
         dir
         dir Dest
-        
-    - name: After Upload
-      env: 
-        tag_name: ${{ steps.checkout-tagname.outputs.tag_name }}
-      run: |
         cd Dest
         ren lw.exe lw-${{ env.tag_name }}-${{ matrix.configuration }}-${{ matrix.platform }}.exe
-      
-    - name: Upload To Github Release
+
+    - name: Publish Release
       uses: xresloader/upload-to-github-release@v1.3.0
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
