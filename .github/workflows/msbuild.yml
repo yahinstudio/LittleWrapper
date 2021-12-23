@@ -56,6 +56,7 @@ jobs:
         dir Dest
         cd Dest
         ren lw.exe lw-${{ env.tag_name }}-${{ matrix.configuration }}-${{ matrix.platform }}.exe
+        ren lw.pdb lw-${{ env.tag_name }}-${{ matrix.configuration }}-${{ matrix.platform }}.pdb
 
     - name: Publish Release
       uses: xresloader/upload-to-github-release@v1.3.0
@@ -63,7 +64,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
         tag_name: ${{ steps.checkout-tagname.outputs.tag_name }}
       with:
-        file: Dest/lw-${{ env.tag_name }}-${{ matrix.configuration }}-${{ matrix.platform }}.exe
+        file: Dest/lw-${{ env.tag_name }}-${{ matrix.configuration }}-${{ matrix.platform }}.*
         draft: false
         tags: false
         tag_name: ${{ env.tag_name }}
