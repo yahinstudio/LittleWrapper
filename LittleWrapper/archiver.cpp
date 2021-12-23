@@ -151,26 +151,24 @@ static void pack_with_dir(vector<file_struct> files, json_obj& record_list, std:
 /// <summary>
 /// 清理多余文件和目录
 /// </summary>
-/// <param name="base_path">要清理的目录目录</param>
+/// <param name="base_path">要清理的目录路径</param>
 /// <param name="relative_path">相对目录</param>
-/// <param name="template_file_table">不要清理的文件</param>
+/// <param name="local_files">要拿来对比的本地文件</param>
+/// <param name="template_files">不要清理的文件</param>
 /// <param name="template_directories">不要清理的目录</param>
-static void clean_folder(string base_path, string relative_path, json_obj& template_file_table, vector<string>& template_directories)
+static void clean_folder(string base_path, string relative_path, vector<file_struct> local_files, vector<string>& template_files, vector<string>& template_directories)
 {
-    vector<file_struct> files = cal_dir_struct(base_path + relative_path);
-
-    for (int i = 0; i < files.size(); i++)
+    for (int i = 0; i < local_files.size(); i++)
     {
-        file_struct entry = files[i];
+        file_struct entry = local_files[i];
         string relative_entry = relative_path + entry.name;
 
         if (entry.is_file)
         {
             bool found = false;
-            for (int i = 0; i < template_file_table.get_array_size(); i++)
+            for (int i = 0; i < template_files.size(); i++)
             {
-                json_obj item = template_file_table[i];
-                if (relative_entry == item.get_object_string("raw_path"))
+                if (relative_entry == template_files[i])
                 {
                     found = true;
                     break;
@@ -178,19 +176,20 @@ static void clean_folder(string base_path, string relative_path, json_obj& templ
             }
 
             if (!found)
-                remove_file_or_dir(base_path + relative_entry);
+                remove_file_or_dir(base_path + "\\" + relative_entry);
         } else {
             clean_folder(
                 base_path,
-                relative_path + entry.name + "\\",
-                template_file_table, 
+                relative_path + (relative_path.empty() ? "" : "\\") + entry.name,
+                entry.children,
+                template_files, 
                 template_directories
             );
 
             bool found = false;
             for (int i = 0; i < template_directories.size(); i++)
             {
-                if (string_replace(template_directories[i], "/", "\\") == relative_entry)
+                if (template_directories[i] == relative_entry)
                 {
                     found = true;
                     break;
@@ -198,7 +197,7 @@ static void clean_folder(string base_path, string relative_path, json_obj& templ
             }
 
             if (!found)
-                remove_file_or_dir(base_path + relative_entry);
+                remove_file_or_dir(base_path + "\\" + relative_entry);
         }
     }
 }
@@ -384,7 +383,15 @@ void archiver::lw_extract(std::string file_to_extract, std::string extract_dir, 
             error_check(!_mkdir(extract_dir.c_str()), "failed to create the dir to extract: " + extract_dir);
 
         // 清理多余的文件
-        clean_folder(extract_dir + "\\", "", file_table, directories);
+        vector<string> _files; // 不要清理的文件的路径
+        for (int i = 0; i < file_table.get_array_size(); i++)
+            _files.emplace_back(string_replace(file_table[i].get_object_string("raw_path"), "/", "\\"));
+        vector<string> _dirs; // 不要清理的目录的路径
+        for (int i = 0; i < directories.size(); i++)
+            _files.emplace_back(string_replace(directories[i], "/", "\\"));
+        vector<file_struct> local_files = cal_dir_struct(extract_dir); // 本地现有文件状况
+
+        clean_folder(extract_dir, "", local_files, _files, _files);
 
         // 建立所有的文件夹(directories字段)
         for (int i = 0; i < directories.size(); i++)
