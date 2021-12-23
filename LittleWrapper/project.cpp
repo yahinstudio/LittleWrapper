@@ -27,7 +27,7 @@ char* get_application_version()
         }
 
         application_version = new char[version.length() + 1];
-        application_version[version.length() - 1] = 0;
+        application_version[version.length()] = 0;
         memcpy(application_version, version.c_str(), version.length());
     }
     
