@@ -61,6 +61,21 @@ LittleWrapper是一个适用于Windows平台的可执行文件打包程序，用
 -a # 不同的写法
 ```
 
+### 运行时变量
+
+出了父进程的环境变量以外，LittleWrapper还会给子进程添加额外的环境变量：
+
+| 环境变量          | 描述                            | 示例                 |
+| ----------------- | ------------------------------- | -------------------- |
+| \_LW_EXEFILE      | LittleWrapper的路径             | c:\\some_dir\\lw.exe |
+| \_LW_EXEDIR       | LittleWrapper所在目录的路径     | c:\\some_dir         |
+| \_LW_TEMPDIR      | LittleWrapper临时释放文件的路径 | c:\\temp_dir\\LW-xxx |
+| \_LW_EXEFILE\_    | 正斜线版本的\_LW_EXEFILE        | c:/some_dir/lw.exe   |
+| \_LW_EXEDIR\_     | 正斜线版本的\_LW_EXEDIR         | c:/some_dir          |
+| \_LW_TEMPDIR\_    | 正斜线版本的\_LW_TEMPDIR        | c:/temp_dir/LW-xxx   |
+| \_LW_VERSION      | LittleWrapper版本号             | v1.0.0               |
+| \_LW_COMPILE_TIME | LittleWrapper的编译时间(utc +0) | Dec 23 2021 18:26:53 |
+
 ### 开源项目
 
 感谢以下开源项目的作者！
