@@ -61,7 +61,7 @@ jobs:
     - name: Publish Release
       uses: xresloader/upload-to-github-release@v1.3.0
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         tag_name: ${{ steps.checkout-tagname.outputs.tag_name }}
       with:
         file: Dest/lw-${{ env.tag_name }}-${{ matrix.configuration }}-${{ matrix.platform }}.*
